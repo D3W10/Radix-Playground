@@ -1,16 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
+import { useEffect, useRef, useState } from "react";
+import { getPanelElement, ImperativePanelHandle, Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import Editor, { useMonaco } from "@monaco-editor/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import PanelLayout from "@/src/components/PanelLayout";
-import TreeView from "@/src/components/TreeView";
-import Button from "@/src/components/Button";
-import type { ExecResult } from "@/src/models/ExecResult.interface";
+import PanelLayout from "@/app/_src/components/PanelLayout";
+import TreeView from "@/app/_src/components/TreeView";
+import Button from "@/app/_src/components/Button";
+import type { ServerResult } from "./_src/models/ServerResult.interface";
+import type { EngineRoute } from "./engine/route";
+import type { FileNode } from "./_src/models/FileNode.interface";
 
 export default function Home() {
     const [logs, setLogs] = useState<string[]>([]);
+    const [tree, setTree] = useState<FileNode[]>([]);
+    const [consoleColapsed, setConsoleColapsed] = useState(false);
+    const consolePanel = useRef<ImperativePanelHandle>(null);
+    const consolePanelHtml = useRef<HTMLElement | null>(null);
     const monaco = useMonaco();
 
     async function executeCode() {
@@ -18,15 +24,39 @@ export default function Home() {
             const execResult = await (await fetch("/engine", {
                 method: "POST",
                 body: JSON.stringify({ code: monaco!.editor.getModels()[0].getValue() })
-            })).json() as ExecResult;
+            })).json() as ServerResult<EngineRoute>;
 
             if (execResult.status === 0)
-                setLogs(execResult.log.split("\n"));
+                setLogs(execResult.data!.log.split("\n"));
         }
         catch (err) {
             console.error(err);
         }
     }
+
+    function onConsoleResize() {
+        setConsoleColapsed(consolePanelHtml.current?.clientHeight == 48);
+    }
+
+    function onConsoleColapse() {
+        if (!consoleColapsed)
+            consolePanel.current?.resize(0);
+        else
+            consolePanel.current?.resize(25);
+
+        setConsoleColapsed(!consoleColapsed);
+    }
+
+    useEffect(() => {
+        consolePanelHtml.current = getPanelElement("consolePanel");
+
+        (async () => {
+            const exTree = await (await fetch("/exercise")).json() as ServerResult<FileNode[]>;
+
+            if (exTree.status === 0)
+                setTree(exTree.data!);
+        })()
+    }, []);
 
     useEffect(() => {
         if (monaco) {
@@ -63,34 +93,36 @@ export default function Home() {
         <PanelGroup autoSaveId="rootLayout" direction="horizontal">
             <Panel className="min-w-48 min-h-12" defaultSize={70}>
                 <PanelGroup autoSaveId="editorLayout" direction="vertical">
-                    <Panel className="min-w-48 min-h-12">
-                        <PanelLayout className="w-full h-full" title="Editor" signatureIcon="fluent:save-24-regular">
+                    <Panel className="min-w-48 min-h-12" defaultSize={75}>
+                        <PanelLayout title="Editor" signatureIcon="fluent:save-24-regular">
                             <Editor
                                 defaultValue={"console.log(\"Hello world\");"}
                                 defaultLanguage="typescript"
                                 theme="galaxy"
                                 options={{ "bracketPairColorization.enabled": false, minimap: { enabled: false } } as any}
-                                loading={<p className="font-semibold animate-pulse">Loading...</p>}
+                                loading={<Icon className="w-14 h-auto text-emerald-500" icon="svg-spinners:3-dots-move" />}
                             />
                         </PanelLayout>
                     </Panel>
                     <PanelResizeHandle className="h-px bg-slate-700" />
-                    <Panel className="min-w-48 min-h-12" defaultSize={25}>
-                        <PanelLayout title="Console" signatureIcon="fluent:minimize-24-filled">{logs}</PanelLayout>
+                    <Panel id="consolePanel" className="min-w-48 min-h-12" defaultSize={25} ref={consolePanel} onResize={onConsoleResize}>
+                        <PanelLayout title="Console" signatureIcon={!consoleColapsed ? "fluent:chevron-down-24-filled" : "fluent:chevron-up-24-filled"} onClick={onConsoleColapse}>
+                            {logs.map(l => <p className="text-sm font-mono">{l}</p>)}
+                        </PanelLayout>
                     </Panel>
                 </PanelGroup>
             </Panel>
             <PanelResizeHandle className="w-px bg-slate-700" />
-            <Panel className="min-w-48 min-h-12">
-            <PanelGroup autoSaveId="explorerLayout" direction="vertical">
-                    <Panel className="min-w-48 min-h-12">
-                        <PanelLayout title="Explorer">
-                            <TreeView></TreeView>
+            <Panel className="min-w-48 min-h-12" defaultSize={30}>
+                <PanelGroup autoSaveId="explorerLayout" direction="vertical">
+                    <Panel className="min-w-48 min-h-12" defaultSize={85}>
+                        <PanelLayout title="Explorer" signatureIcon="fluent:home-24-regular">
+                            <TreeView className="px-2" tree={tree} />
                         </PanelLayout>
                     </Panel>
                     <PanelResizeHandle className="h-px bg-slate-700" />
-                    <Panel className="min-w-48 min-h-12" defaultSize={20}>
-                        <PanelLayout title="Run & Deploy">
+                    <Panel className="min-w-48 min-h-12" defaultSize={15}>
+                        <PanelLayout title="Run & Deploy" className="flex flex-col justify-center items-center">
                             <Button className="w-full py-3 text-lg space-x-2" onClick={executeCode}>
                                 <Icon className="w-6 h-6" icon="fluent:rocket-24-regular" />
                                 <span>Run code</span>

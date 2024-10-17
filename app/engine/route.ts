@@ -1,8 +1,13 @@
 import { exec } from "child_process";
-import { ExecResult } from "@/src/models/ExecResult.interface";
+import { ServerResult } from "../_src/models/ServerResult.interface";
 
 interface Body {
     code?: string;
+}
+
+export interface EngineRoute {
+    log: string;
+    err: string;
 }
 
 export async function POST(req: Request) {
@@ -10,15 +15,15 @@ export async function POST(req: Request) {
         const json = await req.json() as Body;
     
         if (!json.code)
-            return Response.json({ status: 1 } as ExecResult);
+            return Response.json({ status: 1 } as ServerResult<EngineRoute>);
     
-        const res = await new Promise<ExecResult>((resolve, reject) => {
+        const res = await new Promise<ServerResult<EngineRoute>>((resolve, reject) => {
             console.log(json.code)
             exec(`node -e '${json.code}'`, (error, stdout, stderr) => {
                 if (error)
                     reject(error);
                 else
-                    resolve({ status: 0, log: stdout, err: stderr });
+                    resolve({ status: 0, data: { log: stdout, err: stderr } });
             });
         });
        
@@ -26,6 +31,6 @@ export async function POST(req: Request) {
     }
     catch (err) {
         console.error(err);
-        return Response.json({ status: -1 } as ExecResult);
+        return Response.json({ status: -1 } as ServerResult<EngineRoute>);
     }
 }
