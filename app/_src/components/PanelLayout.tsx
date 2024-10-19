@@ -12,10 +12,10 @@ interface PanelLayoutProps {
 export default function PanelLayout({ children, className, title, signatureIcon, onClick }: PropsWithChildren<PanelLayoutProps>) {
     return (
         <div className="w-full h-full flex flex-col">
-            <div className="h-12 p-3 flex justify-between items-center">
+            <div className="h-12 p-2 flex justify-between items-center">
                 <h3 className="m-1 text-slate-500 text-xs font-medium tracking-wide uppercase">{title}</h3>
                 {signatureIcon ?
-                    <button onClick={onClick}>
+                    <button className="p-1 hover:bg-slate-900 rounded" onClick={onClick}>
                         <Icon className="w-6 h-6 text-slate-300" icon={signatureIcon} />
                     </button>
                 :

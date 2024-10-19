@@ -7,6 +7,8 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import PanelLayout from "@/app/_src/components/PanelLayout";
 import TreeView from "@/app/_src/components/TreeView";
 import Button from "@/app/_src/components/Button";
+import LoadSpinner from "./_src/components/LoadSpinner";
+import { defineGalaxy } from "./_src/models/defineGalaxy.function";
 import type { ServerResult } from "./_src/models/ServerResult.interface";
 import type { EngineRoute } from "./engine/route";
 import type { FileNode } from "./_src/models/FileNode.interface";
@@ -60,31 +62,7 @@ export default function Home() {
 
     useEffect(() => {
         if (monaco) {
-            monaco.editor.defineTheme("galaxy", {
-                base: "vs-dark",
-                inherit: true,
-                rules: [
-                    { token: "comment", foreground: "5C7884" },
-                    { token: "keyword", foreground: "CC80FF" },
-                    { token: "string", foreground: "C8FF75" },
-                    { token: "number", foreground: "FF8A66" },
-                    { token: "operator", foreground: "8ADEFF" },
-                    { token: "delimiter", foreground: "8ADEFF" },
-                    { token: "identifier", foreground: "FF6169" },
-                    { token: "function", foreground: "80A8FF" },
-                    { token: "javascript", foreground: "FF6169" },
-                    { token: "type", foreground: "FFBF47" }
-                ],
-                colors: {
-                    "editor.background": "#020617",
-                    "editor.foreground": "#f8fafc",
-                    "editorCursor.foreground": "#ffffff",
-                    "editor.lineHighlightBackground": "#0f172a",
-                    "editorLineNumber.foreground": "#475569",
-                    "editor.selectionBackground": "#334155",
-                    "editor.inactiveSelectionBackground": "#1e293b"
-                }
-            });
+            defineGalaxy(monaco);
             monaco.editor.setTheme("galaxy");
         }
     }, [monaco]);
