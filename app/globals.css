@@ -5,3 +5,27 @@
 html {
     @apply w-full h-full;
 }
+
+.markdown {
+    @apply space-y-2;
+}
+
+.markdown hr {
+    @apply !my-8 border-slate-700;
+}
+
+.markdown :not(pre) > code {
+    @apply font-semibold text-emerald-500;
+}
+
+.markdown pre {
+    @apply w-full mt-2 mb-4 px-3 py-2 bg-slate-900 rounded;
+}
+
+.markdown ul {
+    @apply pl-8 space-y-1;
+}
+
+.markdown ul li {
+    @apply relative before:content-["\2013"] before:absolute before:-left-6 before:text-emerald-500 before:font-bold;
+}

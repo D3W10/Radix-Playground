@@ -1,10 +1,10 @@
 import fs from "fs";
 import readline from "readline";
+import matter from "gray-matter";
 import { ServerResult } from "../_src/models/ServerResult.interface";
 import { FileNode } from "../_src/models/FileNode.interface";
-import { Exercise } from "../_src/models/Exercise.interface";
 
-export async function GET(req: Request) {
+export async function GET() {
     try {
         const tree = await getTree("./public/exercises");
 
@@ -23,24 +23,32 @@ function getTree(path: string): Promise<FileNode[]> {
         const info = fs.statSync(`${path}/${f}`);
 
         if (info.isDirectory())
-            return { name: f, files: await getTree(`${path}/${f}`) } as FileNode;
-        else {
-            const data = await readExMetadata(`${path}/${f}`);
-
-            return { name: data.name, files: [] } as FileNode;
-        }
+            return { id: "", name: f, files: await getTree(`${path}/${f}`) } as FileNode;
+        else
+            return { id: f.substring(0, f.lastIndexOf(".")), name: await readExercName(`${path}/${f}`), files: [] } as FileNode;
     }));
 }
 
-async function readExMetadata(path: string) {
+async function readExercName(path: string) {
     const stream = fs.createReadStream(path);
     const reader = readline.createInterface({ input: stream });
 
-    return new Promise<Exercise>(resolve => {
-        reader.once("line", line => {
-            reader.close();
-            stream.close();
-            resolve(JSON.parse(line));
+    return new Promise<string>(resolve => {
+        let lines = "", start = false;
+
+        reader.on("line", line => {
+            if (line != "---" || line == "---" && !start) {
+                start = true;
+                lines += line + "\n";
+            }
+            else {
+                lines += "---";
+
+                reader.close();
+                stream.close();
+                reader.removeAllListeners("line");
+                resolve(matter(lines).data.name);
+            }
         });
     });
 }

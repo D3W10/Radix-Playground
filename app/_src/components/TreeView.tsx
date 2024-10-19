@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { FileNode } from "../models/FileNode.interface";
@@ -5,29 +6,34 @@ import { FileNode } from "../models/FileNode.interface";
 interface TreeViewProps {
     className?: string;
     tree: FileNode[];
+    onClick?: (id: string) => unknown;
 }
 
-export default function TreeView({ className, tree }: TreeViewProps) {
+export default function TreeView({ className, tree, onClick }: TreeViewProps) {
     function TreeNode({ className, dirClassName, node }: { className?: string, dirClassName?: string, node: FileNode }) {
+        const [colapsed, setColapsed] = useState(true);
+
         return node.files.length > 0 ? (
-            <div className={className}>
-                <div className={twMerge("p-1 flex items-center relative text-slate-300 space-x-2", dirClassName)}>
-                    <Icon className="w-5 h-5" icon="fluent:folder-open-24-regular" />
-                    <p>{node.name}</p>
-                </div>
-                {node.files.map(f => <TreeNode node={f} className="ml-3 pl-4 border-l border-slate-800" dirClassName="before:w-4 before:h-px before:block before:absolute before:-left-4 before:bg-slate-800" />)}
+            <div className={twMerge("space-y-0.5", className)}>
+                <button className={twMerge("w-full p-2 flex items-center relative text-slate-300 hover:bg-slate-900 rounded text-sm space-x-2", dirClassName)} onClick={() => setColapsed(!colapsed)}>
+                    <Icon className="w-5 h-5" icon={colapsed ? "fluent:folder-24-regular" : "fluent:folder-open-24-regular"} />
+                    <p>{node.name.substring(node.name.indexOf("-") + 1)}</p>
+                </button>
+                {!colapsed && (
+                    <div className="ml-4 pl-2 border-l border-slate-800">{node.files.map(f => <TreeNode node={f} key={f.id || f.name} dirClassName="before:w-2 before:h-px before:block before:absolute before:-left-2 before:bg-slate-800" />)}</div>
+                )}
             </div>
         ) : (
-            <div className={twMerge("p-1 flex items-center text-slate-500 space-x-2", className)}>
+            <button className={twMerge("w-full p-2 flex items-center text-slate-500 hover:bg-slate-900 rounded text-sm space-x-2", className)} onClick={() => onClick!(node.id)}>
                 <Icon className="w-5 h-5" icon="fluent:square-24-regular" />
                 <p>{node.name}</p>
-            </div>
+            </button>
         );
     }
 
     return (
-        <div className={className}>
-            {tree.map(f => <TreeNode node={f} />)}
+        <div className={twMerge("space-y-0.5", className)}>
+            {tree.map(f => <TreeNode node={f} key={f.id || f.name} />)}
         </div>
     );
 }

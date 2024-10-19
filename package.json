@@ -19,10 +19,13 @@
     "type": "module",
     "dependencies": {
         "@monaco-editor/react": "^4.6.0",
+        "gray-matter": "^4.0.3",
         "next": "14.2.15",
         "react": "^18",
         "react-dom": "^18",
         "react-resizable-panels": "^2.1.4",
+        "remark": "^15.0.1",
+        "remark-html": "^16.0.1",
         "tailwind-merge": "^2.5.4"
     },
     "devDependencies": {
