@@ -8,6 +8,7 @@ import Icon from "./_src/components/Icon";
 import TreeView from "@/app/_src/components/TreeView";
 import Button from "@/app/_src/components/Button";
 import LoadSpinner from "./_src/components/LoadSpinner";
+import Dialog, { DialogMethods } from "./_src/components/Dialog";
 import { defineGalaxy } from "./_src/models/defineGalaxy.function";
 import type { ServerResult } from "./_src/models/ServerResult.interface";
 import type { EngineRoute } from "./engine/route";
@@ -27,10 +28,12 @@ export default function Home() {
     const consoleIsResizing = useRef(false);
     const consolePanel = useRef<ImperativePanelHandle>(null);
     const consolePanelHtml = useRef<HTMLElement | null>(null);
+    const dialogRef = useRef<DialogMethods>(null);
     const monaco = useMonaco();
 
     async function executeCode() {
         setIsRunning(true);
+        setConsoleColapsed(false);
 
         try {
             const execResult = await (await fetch("/engine", {
@@ -50,7 +53,14 @@ export default function Home() {
 
     async function openExercise(id: string) {
         if (monaco!.editor.getModels()[0].getValue() != defaultCode) {
-            console.log("Will return")
+            const dialogResult = await dialogRef.current?.openModal({
+                title: "Unsaved changes",
+                message: "Your current unsaved code will be lost if you open this exercise. Are you sure you want to continue?",
+                canCancel: true
+            });
+
+            if (!dialogResult)
+                return;
         }
 
         setShowExercise(true);
@@ -114,8 +124,10 @@ export default function Home() {
                         </Panel>
                         <PanelResizeHandle className="h-px bg-slate-700" onDragging={state => consoleIsResizing.current = state} />
                         <Panel id="consolePanel" className="min-w-48 min-h-12" defaultSize={25} ref={consolePanel} onResize={onConsoleResize}>
-                            <PanelLayout title="Console" signatureIcon={!consoleColapsed ? "chevron-down" : "chevron-up"} onClick={() => setConsoleColapsed(!consoleColapsed)}>
-                                {logs.map(l => <p className="text-sm font-mono">{l}</p>)}
+                            <PanelLayout title="Console" className="w-auto mr-2 pr-2 flex flex-col-reverse overflow-y-auto" signatureIcon={!consoleColapsed ? "chevron-down" : "chevron-up"} onClick={() => setConsoleColapsed(!consoleColapsed)}>
+                                <div className="px-4">
+                                    {logs.map((l, i) => <p key={i} className="text-sm font-mono">{l}</p>)}
+                                </div>
                             </PanelLayout>
                         </Panel>
                     </PanelGroup>
@@ -135,8 +147,8 @@ export default function Home() {
                                     )}
                                 </PanelLayout>
                             ) : (
-                                <PanelLayout title="Exercise" signatureIcon="home" onClick={() => setShowExercise(false)}>
-                                    {exercise == null ? (
+                                <PanelLayout title="Exercise" signatureIcon="home" onClick={() => { setShowExercise(false); setExercise(undefined); }}>
+                                    {exercise == undefined ? (
                                         <LoadSpinner />
                                     ) : (
                                         <div className="h-full p-2 space-y-6">
@@ -165,6 +177,7 @@ export default function Home() {
                     </PanelGroup>
                 </Panel>
             </PanelGroup>
+            <Dialog ref={dialogRef} />
         </Suspense>
     );
 }
