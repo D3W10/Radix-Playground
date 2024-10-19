@@ -3,8 +3,8 @@
 import { Suspense, useEffect, useRef, useState } from "react";
 import { getPanelElement, ImperativePanelHandle, Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import Editor, { useMonaco } from "@monaco-editor/react";
-import { Icon } from "@iconify/react/dist/iconify.js";
 import PanelLayout from "@/app/_src/components/PanelLayout";
+import Icon from "./_src/components/Icon";
 import TreeView from "@/app/_src/components/TreeView";
 import Button from "@/app/_src/components/Button";
 import LoadSpinner from "./_src/components/LoadSpinner";
@@ -22,6 +22,7 @@ export default function Home() {
     const [showExercise, setShowExercise] = useState(false);
     const [exercise, setExercise] = useState<Exercise>();
     const [consoleColapsed, setConsoleColapsed] = useState(false);
+    const [isRunning, setIsRunning] = useState(false);
 
     const consoleIsResizing = useRef(false);
     const consolePanel = useRef<ImperativePanelHandle>(null);
@@ -29,6 +30,8 @@ export default function Home() {
     const monaco = useMonaco();
 
     async function executeCode() {
+        setIsRunning(true);
+
         try {
             const execResult = await (await fetch("/engine", {
                 method: "POST",
@@ -41,6 +44,8 @@ export default function Home() {
         catch (err) {
             console.error(err);
         }
+
+        setIsRunning(false);
     }
 
     async function openExercise(id: string) {
@@ -97,7 +102,7 @@ export default function Home() {
                 <Panel className="min-w-48 min-h-12" defaultSize={70}>
                     <PanelGroup autoSaveId="editorLayout" direction="vertical">
                         <Panel className="min-w-48 min-h-12" defaultSize={75}>
-                            <PanelLayout title="Editor" signatureIcon="fluent:save-24-regular">
+                            <PanelLayout title="Editor" signatureIcon="save">
                                 <Editor
                                     defaultValue={defaultCode}
                                     defaultLanguage="typescript"
@@ -109,7 +114,7 @@ export default function Home() {
                         </Panel>
                         <PanelResizeHandle className="h-px bg-slate-700" onDragging={state => consoleIsResizing.current = state} />
                         <Panel id="consolePanel" className="min-w-48 min-h-12" defaultSize={25} ref={consolePanel} onResize={onConsoleResize}>
-                            <PanelLayout title="Console" signatureIcon={!consoleColapsed ? "fluent:chevron-down-24-filled" : "fluent:chevron-up-24-filled"} onClick={() => setConsoleColapsed(!consoleColapsed)}>
+                            <PanelLayout title="Console" signatureIcon={!consoleColapsed ? "chevron-down" : "chevron-up"} onClick={() => setConsoleColapsed(!consoleColapsed)}>
                                 {logs.map(l => <p className="text-sm font-mono">{l}</p>)}
                             </PanelLayout>
                         </Panel>
@@ -130,7 +135,7 @@ export default function Home() {
                                     )}
                                 </PanelLayout>
                             ) : (
-                                <PanelLayout title="Exercise" signatureIcon="fluent:home-24-regular" onClick={() => setShowExercise(false)}>
+                                <PanelLayout title="Exercise" signatureIcon="home" onClick={() => setShowExercise(false)}>
                                     {exercise == null ? (
                                         <LoadSpinner />
                                     ) : (
@@ -145,9 +150,15 @@ export default function Home() {
                         <PanelResizeHandle className="h-px bg-slate-700" />
                         <Panel className="min-w-48 min-h-12" defaultSize={15}>
                             <PanelLayout title="Run & Deploy" className="flex flex-col justify-center items-center">
-                                <Button className="w-full py-3 text-lg space-x-2" onClick={executeCode}>
-                                    <Icon className="w-6 h-6" icon="fluent:rocket-24-regular" />
-                                    <span>Run code</span>
+                                <Button className="w-full py-3 text-lg space-x-2" disabled={isRunning} onClick={executeCode}>
+                                    {!isRunning ? (
+                                        <>
+                                            <Icon className="w-6 h-6" icon="rocket" />
+                                            <span>Run code</span>
+                                        </>
+                                    ) : (
+                                        <LoadSpinner className="h-7 text-slate-950" />
+                                    )}
                                 </Button>
                             </PanelLayout>
                         </Panel>

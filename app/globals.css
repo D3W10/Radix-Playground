@@ -6,6 +6,10 @@ html {
     @apply w-full h-full;
 }
 
+:focus-visible {
+    @apply outline outline-2 outline-emerald-500;
+}
+
 .markdown {
     @apply space-y-2;
 }

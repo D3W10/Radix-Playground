@@ -1,11 +1,11 @@
 import { MouseEventHandler, PropsWithChildren } from "react";
 import { twMerge } from "tailwind-merge";
-import { Icon } from "@iconify/react";
+import Icon, { IconNames } from "./Icon";
 
 interface PanelLayoutProps {
     className?: string;
     title: string;
-    signatureIcon?: string;
+    signatureIcon?: IconNames;
     onClick?: MouseEventHandler<HTMLButtonElement>;
 }
 

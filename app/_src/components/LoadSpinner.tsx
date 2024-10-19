@@ -1,9 +1,14 @@
-import { Icon } from "@iconify/react/dist/iconify.js";
+import { twMerge } from "tailwind-merge";
+import Icon from "./Icon";
 
-export default function LoadSpinner() {
+interface LoadSpinnerProps {
+    className?: string;
+}
+
+export default function LoadSpinner({ className }: LoadSpinnerProps) {
     return (
         <div className="h-full flex justify-center items-center">
-            <Icon className="w-14 h-auto text-emerald-500" icon="svg-spinners:3-dots-move" />
+            <Icon className={twMerge("w-14 h-auto text-emerald-500", className)} icon="spinner" />
         </div>
     );
 }

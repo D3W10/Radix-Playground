@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { twMerge } from "tailwind-merge";
-import { Icon } from "@iconify/react/dist/iconify.js";
+import Icon from "./Icon";
 import { FileNode } from "../models/FileNode.interface";
 
 interface TreeViewProps {
@@ -16,7 +16,7 @@ export default function TreeView({ className, tree, onClick }: TreeViewProps) {
         return node.files.length > 0 ? (
             <div className={twMerge("space-y-0.5", className)}>
                 <button className={twMerge("w-full p-2 flex items-center relative text-slate-300 hover:bg-slate-900 rounded text-sm space-x-2", dirClassName)} onClick={() => setColapsed(!colapsed)}>
-                    <Icon className="w-5 h-5" icon={colapsed ? "fluent:folder-24-regular" : "fluent:folder-open-24-regular"} />
+                    <Icon className="w-5 h-5" icon={colapsed ? "folder" : "folder-open"} />
                     <p>{node.name.substring(node.name.indexOf("-") + 1)}</p>
                 </button>
                 {!colapsed && (
@@ -25,7 +25,7 @@ export default function TreeView({ className, tree, onClick }: TreeViewProps) {
             </div>
         ) : (
             <button className={twMerge("w-full p-2 flex items-center text-slate-500 hover:bg-slate-900 rounded text-sm space-x-2", className)} onClick={() => onClick!(node.id)}>
-                <Icon className="w-5 h-5" icon="fluent:square-24-regular" />
+                <Icon className="w-5 h-5" icon="square" />
                 <p>{node.name}</p>
             </button>
         );
