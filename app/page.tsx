@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useRef, useState } from "react";
 import { getPanelElement, ImperativePanelHandle, Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
-import Editor, { useMonaco } from "@monaco-editor/react";
+import Editor, { DiffEditor, useMonaco } from "@monaco-editor/react";
 import PanelLayout from "@/app/_src/components/PanelLayout";
 import Icon from "./_src/components/Icon";
 import TreeView from "@/app/_src/components/TreeView";
@@ -18,12 +18,14 @@ import type { Exercise } from "./_src/models/Exercise.interface";
 const defaultCode = `console.log("Hello world");`;
 
 export default function Home() {
-    const [logs, setLogs] = useState<string[]>([]);
     const [tree, setTree] = useState<FileNode[]>([]);
     const [showExercise, setShowExercise] = useState(false);
     const [exercise, setExercise] = useState<Exercise>();
     const [consoleColapsed, setConsoleColapsed] = useState(false);
     const [isRunning, setIsRunning] = useState(false);
+    const [logs, setLogs] = useState<[boolean, string]>([false, ""]);
+    const [runResult, setRunResult] = useState<0 | 1 | 2>();
+    const [showDiff, setShowDiff] = useState(false);
 
     const consoleIsResizing = useRef(false);
     const consolePanel = useRef<ImperativePanelHandle>(null);
@@ -34,6 +36,7 @@ export default function Home() {
     async function executeCode() {
         setIsRunning(true);
         setConsoleColapsed(false);
+        setRunResult(undefined);
 
         try {
             const execResult = await (await fetch("/engine", {
@@ -41,14 +44,36 @@ export default function Home() {
                 body: JSON.stringify({ code: monaco!.editor.getModels()[0].getValue() })
             })).json() as ServerResult<EngineRoute>;
 
-            if (execResult.status === 0)
-                setLogs(execResult.data!.log.split("\n"));
+            if (execResult.status === 0 && execResult.data) {
+                if (execResult.data.err.length == 0) {
+                    setLogs([false, execResult.data.log]);
+
+                    if (exercise)
+                        validateResult(execResult.data);
+                }
+                else
+                    setLogs([true, execResult.data.err]);
+            }
         }
         catch (err) {
             console.error(err);
         }
 
         setIsRunning(false);
+    }
+
+    function validateResult(data: EngineRoute) {
+        let level: 0 | 1 | 2 = 0;
+        const code = monaco!.editor.getModels()[0].getValue().replace(/\/\/.*|\/\*[\s\S]*?\*\//g, "");
+
+        for (const validator of exercise!.validators) {
+            if (validator.check === "output" && data.log.trim() !== validator.value)
+                level = 2;
+            else if (validator.check === "code" && validator.count && code.matchAll(new RegExp(validator.value, "g")).toArray().length < validator.count)
+                level = level == 0 ? 1 : level;
+        }
+
+        setRunResult(level);
     }
 
     async function openExercise(id: string) {
@@ -66,7 +91,6 @@ export default function Home() {
         setShowExercise(true);
 
         const exec = await (await fetch("/exercise/" + id)).json() as ServerResult<Exercise>;
-
         if (exec.status === 0) {
             setExercise(exec.data);
         }
@@ -112,22 +136,56 @@ export default function Home() {
                 <Panel className="min-w-48 min-h-12" defaultSize={70}>
                     <PanelGroup autoSaveId="editorLayout" direction="vertical">
                         <Panel className="min-w-48 min-h-12" defaultSize={75}>
-                            <PanelLayout title="Editor" signatureIcon="save">
-                                <Editor
-                                    defaultValue={defaultCode}
-                                    defaultLanguage="typescript"
-                                    theme="galaxy"
-                                    options={{ "bracketPairColorization.enabled": false, minimap: { enabled: false } } as any}
-                                    loading={<LoadSpinner />}
-                                />
-                            </PanelLayout>
+                            <div className={`w-full h-full ${!showDiff ? "block" : "hidden"}`}>
+                                <PanelLayout title="Editor" signatureIcon="save">
+                                    <Editor
+                                        defaultValue={defaultCode}
+                                        defaultLanguage="typescript"
+                                        theme="galaxy"
+                                        options={{ "bracketPairColorization.enabled": false, minimap: { enabled: false } } as any}
+                                        loading={<LoadSpinner />}
+                                    />
+                                </PanelLayout>
+                            </div>
+                            <div className={`w-full h-full ${showDiff ? "block" : "hidden"}`}>
+                                <PanelLayout title="Diff" signatureIcon="return" onClick={() => setShowDiff(false)}>
+                                    <DiffEditor
+                                        original={exercise?.validators.find(v => v.check == "output")?.value}
+                                        modified={logs[1]}
+                                        theme="galaxy"
+                                        options={{ "bracketPairColorization.enabled": false, minimap: { enabled: false }, readOnly: true } as any}
+                                        loading={<LoadSpinner />}
+                                    />
+                                </PanelLayout>
+                            </div>
                         </Panel>
                         <PanelResizeHandle className="h-px bg-slate-700" onDragging={state => consoleIsResizing.current = state} />
                         <Panel id="consolePanel" className="min-w-48 min-h-12" defaultSize={25} ref={consolePanel} onResize={onConsoleResize}>
-                            <PanelLayout title="Console" className="w-auto mr-2 pr-2 flex flex-col-reverse overflow-y-auto" signatureIcon={!consoleColapsed ? "chevron-down" : "chevron-up"} onClick={() => setConsoleColapsed(!consoleColapsed)}>
-                                <div className="px-4">
-                                    {logs.map((l, i) => <p key={i} className="text-sm font-mono">{l}</p>)}
-                                </div>
+                            <PanelLayout title="Console" className="w-auto mr-2 pr-2 flex justify-center items-center overflow-y-auto" signatureIcon={!consoleColapsed ? "chevron-down" : "chevron-up"} onClick={() => setConsoleColapsed(!consoleColapsed)}>
+                                {!isRunning ?
+                                    logs[1].length == 0 ? (
+                                        <p className="text-sm text-slate-500">Nothing to see here</p>
+                                    ) : ( 
+                                        <div className={`w-full min-h-full px-4 ${logs[0] ? "text-red-400" : ""}`}>
+                                            <pre className="text-sm font-mono">{logs[1]}</pre>
+                                            {runResult != undefined && (
+                                                <div className={`mt-12 mb-8 ${runResult == 0 ? "text-emerald-500" : runResult == 1 ? "text-yellow-500" : "text-red-500"} space-y-2`}>
+                                                    <div className="flex items-center space-x-2">
+                                                        <Icon className="w-5 h-5" icon={runResult == 0 ? "correct" : runResult == 1 ? "circle" : "wrong"} />
+                                                        <p>{runResult == 0 ? "Output and requirements were met" : runResult == 1 ? "Correct output but some requirements were not met" : "Incorrect output"}</p>
+                                                    </div>
+                                                    {runResult == 2 && (
+                                                        <button onClick={() => setShowDiff(true)}>
+                                                            <p className="text-sm text-slate-500">Click here to compare the result</p>
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            )}
+                                        </div>
+                                    )
+                                : (
+                                    <LoadSpinner />
+                                )}
                             </PanelLayout>
                         </Panel>
                     </PanelGroup>

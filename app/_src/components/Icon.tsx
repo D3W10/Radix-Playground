@@ -1,20 +1,24 @@
 import React from "react";
 import type { SVGProps } from "react";
 
-export type IconNames = "spinner" | "home" | "save" | "folder" | "folder-open" | "chevron-down" | "chevron-up" | "square" | "square-checked" | "rocket";
+export type IconNames = "spinner" | "home" | "save" | "return" | "folder" | "folder-open" | "chevron-down" | "chevron-up" | "square" | "square-checked" | "rocket" | "correct" | "wrong" | "circle";
 
 export default function Icon({ icon, ...props }: { icon: IconNames } & SVGProps<SVGSVGElement>) {
     const components: Record<IconNames, React.ReactNode> = {
         "spinner": <Spinner {...props} />,
         "home": <Home {...props} />,
         "save": <Save {...props} />,
+        "return": <Return {...props} />,
         "folder": <Folder {...props} />,
         "folder-open": <FolderOpen {...props} />,
         "chevron-down": <ChevronDown {...props} />,
         "chevron-up": <ChevronUp {...props} />,
         "square": <Square {...props} />,
         "square-checked": <SquareChecked {...props} />,
-        "rocket": <Rocket {...props} />
+        "rocket": <Rocket {...props} />,
+        "correct": <Correct {...props} />,
+        "wrong": <Wrong {...props} />,
+        "circle": <Circle {...props} />
     };
     
     return components[icon];
@@ -30,6 +34,10 @@ function Home(props: SVGProps<SVGSVGElement>) {
 
 function Save(props: SVGProps<SVGSVGElement>) {
 	return (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" {...props}><path fill="currentColor" d="M3 5.75A2.75 2.75 0 0 1 5.75 3h9.965a3.25 3.25 0 0 1 2.298.952l2.035 2.035c.61.61.952 1.437.952 2.299v9.964A2.75 2.75 0 0 1 18.25 21H5.75A2.75 2.75 0 0 1 3 18.25zM5.75 4.5c-.69 0-1.25.56-1.25 1.25v12.5c0 .69.56 1.25 1.25 1.25H6v-5.25A2.25 2.25 0 0 1 8.25 12h7.5A2.25 2.25 0 0 1 18 14.25v5.25h.25c.69 0 1.25-.56 1.25-1.25V8.286c0-.465-.184-.91-.513-1.238l-2.035-2.035a1.75 1.75 0 0 0-.952-.49V7.25a2.25 2.25 0 0 1-2.25 2.25h-4.5A2.25 2.25 0 0 1 7 7.25V4.5zm10.75 15v-5.25a.75.75 0 0 0-.75-.75h-7.5a.75.75 0 0 0-.75.75v5.25zm-8-15v2.75c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75V4.5z"></path></svg>);
+}
+
+function Return(props: SVGProps<SVGSVGElement>) {
+	return (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" {...props}><path fill="currentColor" d="M7 19.25c0 .414.336.75.75.75H14c1.979 0 3.504-.823 4.52-2.074c1-1.233 1.48-2.846 1.48-4.426s-.48-3.193-1.48-4.426C17.504 7.823 15.979 7 14 7H7.56l2.47-2.47a.75.75 0 1 0-1.06-1.06L5.22 7.22a.75.75 0 0 0 0 1.06l3.75 3.75a.75.75 0 1 0 1.06-1.06L7.56 8.5H14c1.521 0 2.62.615 3.355 1.52c.75.923 1.145 2.185 1.145 3.48s-.396 2.557-1.145 3.48c-.734.905-1.834 1.52-3.355 1.52H7.75a.75.75 0 0 0-.75.75"></path></svg>);
 }
 
 function Folder(props: SVGProps<SVGSVGElement>) {
@@ -58,4 +66,16 @@ function SquareChecked(props: SVGProps<SVGSVGElement>) {
 
 function Rocket(props: SVGProps<SVGSVGElement>) {
 	return (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" {...props}><path fill="currentColor" d="M13.057 7.43a2.5 2.5 0 1 1 3.536 3.536a2.5 2.5 0 0 1-3.536-3.535m2.475 1.061a1 1 0 1 0-1.414 1.415a1 1 0 0 0 1.414-1.415m5.977-4.169a2.75 2.75 0 0 0-1.811-1.81l-.663-.206a6.75 6.75 0 0 0-6.773 1.674l-.996.996a3.5 3.5 0 0 0-4.57.327L5.455 6.545a.75.75 0 0 0 0 1.06l1.591 1.592l-.18.18a1.75 1.75 0 0 0 0 2.474l.496.496l-1.396.796a.75.75 0 0 0-.158 1.181l3.889 3.89a.75.75 0 0 0 1.181-.158l.798-1.395l.497.497a1.75 1.75 0 0 0 2.475 0l.177-.177l1.59 1.59a.75.75 0 0 0 1.06 0l1.242-1.243a3.5 3.5 0 0 0 .328-4.567l.998-.998a6.75 6.75 0 0 0 1.673-6.777zm-2.256-.378c.393.122.701.43.823.823l.207.665a5.25 5.25 0 0 1-1.302 5.27l-5.395 5.395a.25.25 0 0 1-.353 0l-5.307-5.306a.25.25 0 0 1 0-.354l5.397-5.396a5.25 5.25 0 0 1 5.268-1.302zm-1.289 9.897c.453.766.35 1.769-.308 2.427l-.712.712l-1.06-1.06zM7.758 6.363a2 2 0 0 1 2.428-.307l-2.08 2.08l-1.06-1.06zm2.818 9.199l-.514.897l-2.5-2.5l.898-.513zM6.69 18.394a.75.75 0 0 0-1.06-1.06l-2.476 2.474a.75.75 0 0 0 1.061 1.061zM4.745 15.39a.75.75 0 0 1 0 1.06l-1.06 1.061a.75.75 0 0 1-1.061-1.06l1.06-1.061a.75.75 0 0 1 1.061 0m3.887 4.952a.75.75 0 1 0-1.06-1.06L6.513 20.34a.75.75 0 0 0 1.06 1.06z"></path></svg>);
+}
+
+function Correct(props: SVGProps<SVGSVGElement>) {
+	return (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" {...props}><path fill="currentColor" d="M9.854 3.146a.5.5 0 0 1 0 .708l-4.5 4.5a.5.5 0 0 1-.708 0l-2-2a.5.5 0 1 1 .708-.708L5 7.293l4.146-4.147a.5.5 0 0 1 .708 0"></path></svg>);
+}
+
+function Circle(props: SVGProps<SVGSVGElement>) {
+	return (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" {...props}><path fill="currentColor" d="M6 2a4 4 0 1 0 0 8a4 4 0 0 0 0-8M1 6a5 5 0 1 1 10 0A5 5 0 0 1 1 6"></path></svg>);
+}
+
+function Wrong(props: SVGProps<SVGSVGElement>) {
+	return (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" {...props}><path fill="currentColor" d="m2.089 2.216l.057-.07a.5.5 0 0 1 .638-.057l.07.057L6 5.293l3.146-3.147a.5.5 0 1 1 .708.708L6.707 6l3.147 3.146a.5.5 0 0 1 .057.638l-.057.07a.5.5 0 0 1-.638.057l-.07-.057L6 6.707L2.854 9.854a.5.5 0 0 1-.708-.708L5.293 6L2.146 2.854a.5.5 0 0 1-.057-.638l.057-.07z"></path></svg>);
 }
