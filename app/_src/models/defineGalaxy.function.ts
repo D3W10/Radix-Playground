@@ -1,4 +1,4 @@
-export function defineGalaxy(monaco: typeof import("/Users/danielnunes/Documents/Projetos/VSCode/Radix Playground Next/node_modules/monaco-editor/esm/vs/editor/editor.api")) {
+export function defineGalaxy(monaco: typeof import("@/node_modules/monaco-editor/esm/vs/editor/editor.api")) {
     return monaco.editor.defineTheme("galaxy", {
         base: "vs-dark",
         inherit: true,
