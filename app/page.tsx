@@ -164,7 +164,6 @@ export default function Home() {
     }, []);
 
     useEffect(() => {
-        console.log(lStorage, treeView !== undefined);
         if (treeView !== undefined) {
             setTreeView([treeView[0], Object.keys(lStorage).filter(k => lStorage[k].completed).map(k => k.replace("ex-", ""))]);
         }
@@ -173,7 +172,7 @@ export default function Home() {
     useEffect(() => {
         if (consoleColapsed)
             consolePanel.current?.resize(0);
-        else
+        else if (!consoleIsResizing.current)
             consolePanel.current?.resize(25);
     }, [consoleColapsed]);
 
