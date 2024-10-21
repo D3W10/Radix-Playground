@@ -10,6 +10,7 @@ import Button from "@/app/_src/components/Button";
 import LoadSpinner from "./_src/components/LoadSpinner";
 import Dialog, { DialogMethods } from "./_src/components/Dialog";
 import { defineGalaxy } from "./_src/models/defineGalaxy.function";
+import { cleanInvalidStorageEntries, ExStore } from "./_src/utils";
 import type { ServerResult } from "./_src/models/ServerResult.interface";
 import type { EngineRoute } from "./engine/route";
 import type { FileNode } from "./_src/models/FileNode.interface";
@@ -18,9 +19,11 @@ import type { Exercise } from "./_src/models/Exercise.interface";
 const defaultCode = `console.log("Hello world");`;
 
 export default function Home() {
-    const [tree, setTree] = useState<FileNode[]>([]);
+    const [lStorage, setLStorage] = useState<Record<string, ExStore>>({});
+    const [treeView, setTreeView] = useState<[FileNode[], string[]]>();
     const [showExercise, setShowExercise] = useState(false);
     const [exercise, setExercise] = useState<Exercise>();
+    const [saveEnabled, setSaveEnabled] = useState(false);
     const [consoleColapsed, setConsoleColapsed] = useState(false);
     const [isRunning, setIsRunning] = useState(false);
     const [logs, setLogs] = useState<[boolean, string]>([false, ""]);
@@ -37,6 +40,7 @@ export default function Home() {
         setIsRunning(true);
         setConsoleColapsed(false);
         setRunResult(undefined);
+        setSaveEnabled(false);
 
         try {
             const execResult = await (await fetch("/engine", {
@@ -45,14 +49,19 @@ export default function Home() {
             })).json() as ServerResult<EngineRoute>;
 
             if (execResult.status === 0 && execResult.data) {
+                let success = false;
+
                 if (execResult.data.err.length == 0) {
                     setLogs([false, execResult.data.log]);
 
                     if (exercise)
-                        validateResult(execResult.data);
+                        success = validateResult(execResult.data) == 0;
                 }
                 else
                     setLogs([true, execResult.data.err]);
+
+                if (exercise)
+                    saveExercise(success);
             }
         }
         catch (err) {
@@ -74,6 +83,16 @@ export default function Home() {
         }
 
         setRunResult(level);
+        return level;
+    }
+
+    function onConsoleResize() {
+        if (consoleIsResizing.current) {
+            if (consolePanelHtml.current!.clientHeight <= 48)
+                setConsoleColapsed(true);
+            else
+                setConsoleColapsed(false);
+        }
     }
 
     async function openExercise(id: string) {
@@ -88,7 +107,9 @@ export default function Home() {
                 return;
         }
 
+        monaco!.editor.getModels()[0].setValue(lStorage[`ex-` + id] && lStorage[`ex-` + id].content || defaultCode);
         setShowExercise(true);
+        setSaveEnabled(false);
 
         const exec = await (await fetch("/exercise/" + id)).json() as ServerResult<Exercise>;
         if (exec.status === 0) {
@@ -96,12 +117,34 @@ export default function Home() {
         }
     }
 
-    function onConsoleResize() {
-        if (consoleIsResizing.current) {
-            if (consolePanelHtml.current!.clientHeight <= 48)
-                setConsoleColapsed(true);
-            else
-                setConsoleColapsed(false);
+    function saveExercise(completed = false) {
+        if (exercise) {
+            const newData: ExStore = { completed: completed, content: monaco!.editor.getModels()[0].getValue() };
+
+            setSaveEnabled(false);
+
+            setLStorage({ ...lStorage, [`ex-` + exercise.id]: newData });
+            localStorage.setItem(`ex-` + exercise.id, JSON.stringify(newData));
+        }
+    }
+
+    async function closeExercise() {
+        if (exercise) {
+            if (monaco!.editor.getModels()[0].getValue() !== lStorage[`ex-` + exercise.id].content) {
+                const dialogResult = await dialogRef.current?.openModal({
+                    title: "Unsaved changes",
+                    message: "There are unsaved changes on your current exercise that will be lost upon closing. Are you sure you want to continue?",
+                    canCancel: true
+                });
+    
+                if (!dialogResult)
+                    return;
+            }
+
+            setShowExercise(false);
+            setExercise(undefined);
+    
+            monaco!.editor.getModels()[0].setValue(defaultCode);
         }
     }
 
@@ -111,10 +154,21 @@ export default function Home() {
         (async () => {
             const exTree = await (await fetch("/exercise")).json() as ServerResult<FileNode[]>;
 
-            if (exTree.status === 0)
-                setTree(exTree.data!);
+            if (exTree.status === 0 && exTree.data !== undefined) {
+                setTreeView([exTree.data, []]);
+
+                const cleanStorage = cleanInvalidStorageEntries(localStorage, exTree.data);
+                setLStorage(cleanStorage);
+            }
         })();
     }, []);
+
+    useEffect(() => {
+        console.log(lStorage, treeView !== undefined);
+        if (treeView !== undefined) {
+            setTreeView([treeView[0], Object.keys(lStorage).filter(k => lStorage[k].completed).map(k => k.replace("ex-", ""))]);
+        }
+    }, [lStorage]);
 
     useEffect(() => {
         if (consoleColapsed)
@@ -137,13 +191,14 @@ export default function Home() {
                     <PanelGroup autoSaveId="editorLayout" direction="vertical">
                         <Panel className="min-w-48 min-h-12" defaultSize={75}>
                             <div className={`w-full h-full ${!showDiff ? "block" : "hidden"}`}>
-                                <PanelLayout title="Editor" signatureIcon="save">
+                                <PanelLayout title="Editor" signatureIcon={exercise != undefined && saveEnabled ? "save" : undefined} onClick={() => saveExercise()}>
                                     <Editor
                                         defaultValue={defaultCode}
                                         defaultLanguage="typescript"
                                         theme="galaxy"
                                         options={{ "bracketPairColorization.enabled": false, minimap: { enabled: false } } as any}
                                         loading={<LoadSpinner />}
+                                        onChange={() => setSaveEnabled(true)}
                                     />
                                 </PanelLayout>
                             </div>
@@ -196,16 +251,20 @@ export default function Home() {
                         <Panel className="min-w-48 min-h-12" defaultSize={85}>
                             {!showExercise ? (
                                 <PanelLayout title="Explorer">
-                                    {tree.length == 0 ? (
+                                    {treeView == undefined ? (
                                         <LoadSpinner />
                                     ) : (
-                                        <div className="h-full mb-10 overflow-y-scroll">
-                                            <TreeView className="px-2" tree={tree} onClick={openExercise} />
+                                        <div className={`h-full ${treeView[0].length == 0 ? "flex justify-center items-center" : ""} overflow-y-auto`}>
+                                            {treeView[0].length == 0 ? (
+                                                <p className="text-sm text-slate-500">Nothing to see here</p>
+                                            ) : (
+                                                <TreeView className="px-2" tree={treeView[0]} completed={treeView[1]} onClick={openExercise} />
+                                            )}
                                         </div>
                                     )}
                                 </PanelLayout>
                             ) : (
-                                <PanelLayout title="Exercise" signatureIcon="home" onClick={() => { setShowExercise(false); setExercise(undefined); }}>
+                                <PanelLayout title="Exercise" signatureIcon="home" onClick={closeExercise}>
                                     {exercise == undefined ? (
                                         <LoadSpinner />
                                     ) : (

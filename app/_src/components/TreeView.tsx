@@ -6,10 +6,11 @@ import { FileNode } from "../models/FileNode.interface";
 interface TreeViewProps {
     className?: string;
     tree: FileNode[];
+    completed?: string[];
     onClick?: (id: string) => unknown;
 }
 
-export default function TreeView({ className, tree, onClick }: TreeViewProps) {
+export default function TreeView({ className, tree, completed = [], onClick }: TreeViewProps) {
     function TreeNode({ className, dirClassName, node }: { className?: string, dirClassName?: string, node: FileNode }) {
         const [colapsed, setColapsed] = useState(true);
 
@@ -24,8 +25,8 @@ export default function TreeView({ className, tree, onClick }: TreeViewProps) {
                 )}
             </div>
         ) : (
-            <button className={twMerge("w-full p-2 flex items-center text-slate-500 hover:bg-slate-900 rounded text-sm space-x-2", className)} onClick={() => onClick!(node.id)}>
-                <Icon className="w-5 h-5" icon="square" />
+            <button className={twMerge(`w-full p-2 flex items-center ${!completed.includes(node.id) ? "text-slate-500 hover:bg-slate-900" : "text-emerald-600 hover:bg-emerald-500/10"} rounded text-sm space-x-2`, className)} onClick={() => onClick!(node.id)}>
+                <Icon className="w-5 h-5" icon={!completed.includes(node.id) ? "square" : "square-checked"} />
                 <p>{node.name}</p>
             </button>
         );

@@ -12,7 +12,7 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
         if (fileContent == null)
             return Response.json({ status: 1 } as ServerResult<Exercise>);
 
-        return Response.json({ status: 0, data: await exerciseParser(fileContent) } as ServerResult<Exercise>);
+        return Response.json({ status: 0, data: { id: params.id, ...await exerciseParser(fileContent) } } as ServerResult<Exercise>);
     }
     catch (err) {
         console.error(err);
@@ -39,7 +39,7 @@ function findAndReadFile(dir: string, filename: string): string | null {
     return null;
 }
 
-async function exerciseParser(content: string): Promise<Exercise> {
+async function exerciseParser(content: string): Promise<Omit<Exercise, "id">> {
     const matterResult = matter(content);
     const processedContent = await remark().use(html).process(matterResult.content);
 
