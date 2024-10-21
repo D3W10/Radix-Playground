@@ -1,4 +1,4 @@
-import { MouseEventHandler, PropsWithChildren } from "react";
+import { forwardRef, MouseEventHandler, PropsWithChildren } from "react";
 import { twMerge } from "tailwind-merge";
 import Icon, { IconNames } from "./Icon";
 
@@ -9,7 +9,7 @@ interface PanelLayoutProps {
     onClick?: MouseEventHandler<HTMLButtonElement>;
 }
 
-export default function PanelLayout({ children, className, title, signatureIcon, onClick }: PropsWithChildren<PanelLayoutProps>) {
+const PanelLayout = forwardRef<HTMLDivElement, PropsWithChildren<PanelLayoutProps>>(({ children, className, title, signatureIcon, onClick }, ref) => {
     return (
         <div className="w-full h-full flex flex-col">
             <div className="min-h-12 p-2 flex justify-between items-center">
@@ -22,9 +22,11 @@ export default function PanelLayout({ children, className, title, signatureIcon,
                     <div />
                 }
             </div>
-            <div className={twMerge("w-full h-full p-4 pt-0", className)}>
+            <div className={twMerge("w-full h-full p-4 pt-0", className)} ref={ref}>
                 {children}
             </div>
         </div>
     );
-}
+});
+
+export default PanelLayout;

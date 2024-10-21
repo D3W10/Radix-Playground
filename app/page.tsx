@@ -33,6 +33,7 @@ export default function Home() {
     const consoleIsResizing = useRef(false);
     const consolePanel = useRef<ImperativePanelHandle>(null);
     const consolePanelHtml = useRef<HTMLElement | null>(null);
+    const consolePanelLayoutHtml = useRef<HTMLDivElement | null>(null);
     const dialogRef = useRef<DialogMethods>(null);
     const monaco = useMonaco();
 
@@ -170,6 +171,11 @@ export default function Home() {
     }, [lStorage]);
 
     useEffect(() => {
+        if (consolePanelLayoutHtml.current !== null)
+            consolePanelLayoutHtml.current.scrollTop = consolePanelLayoutHtml.current.scrollHeight;
+    }, [logs]);
+
+    useEffect(() => {
         if (consoleColapsed)
             consolePanel.current?.resize(0);
         else if (!consoleIsResizing.current)
@@ -215,7 +221,7 @@ export default function Home() {
                         </Panel>
                         <PanelResizeHandle className="h-px bg-slate-700" onDragging={state => consoleIsResizing.current = state} />
                         <Panel id="consolePanel" className="min-w-48 min-h-12" defaultSize={25} ref={consolePanel} onResize={onConsoleResize}>
-                            <PanelLayout title="Console" className={`w-auto mr-2 pr-2 flex ${isRunning || logs[1].length == 0 ? "justify-center items-center" : ""} overflow-y-auto`} signatureIcon={!consoleColapsed ? "chevron-down" : "chevron-up"} onClick={() => setConsoleColapsed(!consoleColapsed)}>
+                            <PanelLayout title="Console" className={`w-auto mr-2 pr-2 flex ${isRunning || logs[1].length == 0 ? "justify-center items-center" : ""} overflow-y-auto`} signatureIcon={!consoleColapsed ? "chevron-down" : "chevron-up"} ref={consolePanelLayoutHtml} onClick={() => setConsoleColapsed(!consoleColapsed)}>
                                 {!isRunning ?
                                     logs[1].length == 0 ? (
                                         <p className="text-sm text-slate-500">Nothing to see here</p>
