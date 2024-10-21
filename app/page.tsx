@@ -216,18 +216,18 @@ export default function Home() {
                         </Panel>
                         <PanelResizeHandle className="h-px bg-slate-700" onDragging={state => consoleIsResizing.current = state} />
                         <Panel id="consolePanel" className="min-w-48 min-h-12" defaultSize={25} ref={consolePanel} onResize={onConsoleResize}>
-                            <PanelLayout title="Console" className="w-auto mr-2 pr-2 flex justify-center items-center overflow-y-auto" signatureIcon={!consoleColapsed ? "chevron-down" : "chevron-up"} onClick={() => setConsoleColapsed(!consoleColapsed)}>
+                            <PanelLayout title="Console" className={`w-auto mr-2 pr-2 flex ${isRunning || logs[1].length == 0 ? "justify-center items-center" : ""} overflow-y-auto`} signatureIcon={!consoleColapsed ? "chevron-down" : "chevron-up"} onClick={() => setConsoleColapsed(!consoleColapsed)}>
                                 {!isRunning ?
                                     logs[1].length == 0 ? (
                                         <p className="text-sm text-slate-500">Nothing to see here</p>
                                     ) : ( 
-                                        <div className={`w-full min-h-full px-4 ${logs[0] ? "text-red-400" : ""}`}>
+                                        <div className={`w-full h-fit min-h-full px-4 ${logs[0] ? "text-red-400" : ""}`}>
                                             <pre className="text-sm font-mono">{logs[1]}</pre>
                                             {runResult != undefined && (
-                                                <div className={`mt-12 mb-8 ${runResult == 0 ? "text-emerald-500" : runResult == 1 ? "text-yellow-500" : "text-red-500"} space-y-2`}>
+                                                <div className={`my-6 ${runResult == 0 ? "text-emerald-500" : runResult == 1 ? "text-yellow-500" : "text-red-500"} space-y-2`}>
                                                     <div className="flex items-center space-x-2">
                                                         <Icon className="w-5 h-5" icon={runResult == 0 ? "correct" : runResult == 1 ? "circle" : "wrong"} />
-                                                        <p>{runResult == 0 ? "Output and requirements were met" : runResult == 1 ? "Correct output but some requirements were not met" : "Incorrect output"}</p>
+                                                        <p>{runResult == 0 ? "Output and requirements were met" : runResult == 1 ? "Correct output but some requirements were not met" : "Wrong output"}</p>
                                                     </div>
                                                     {runResult == 2 && (
                                                         <button onClick={() => setShowDiff(true)}>

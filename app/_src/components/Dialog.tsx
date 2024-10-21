@@ -47,7 +47,7 @@ const Dialog = forwardRef<DialogMethods, DialogProps>(({ className }, ref) => {
     }
 
     return (
-        <dialog className={twMerge(`w-128 p-8 text-inherit bg-slate-900 border-1.5 border-slate-700 rounded-xl shadow-md ${!isOpen ? "opacity-0 -translate-y-10" : "opacity-100 translate-y-0"} transition duration-300 ${isOpen ? "ease-out" : "ease-in"} backdrop:bg-slate-950/50 ${!isOpen ? "backdrop:opacity-0" : "backdrop:opacity-100"} backdrop:transition-opacity backdrop:duration-300 ${isOpen ? "backdrop:ease-out" : "backdrop:ease-in"}`, className)} ref={modalRef}>
+        <dialog className={twMerge(`w-128 p-8 text-inherit bg-slate-900 border-1.5 border-slate-700 rounded-3xl shadow-md ${!isOpen ? "opacity-0 -translate-y-10" : "opacity-100 translate-y-0"} transition duration-300 ${isOpen ? "ease-out" : "ease-in"} backdrop:bg-slate-950/50 ${!isOpen ? "backdrop:opacity-0" : "backdrop:opacity-100"} backdrop:transition-opacity backdrop:duration-300 ${isOpen ? "backdrop:ease-out" : "backdrop:ease-in"}`, className)} ref={modalRef}>
             {data?.title && <h1 className="mb-2 text-2xl font-bold">{data?.title}</h1>}
             {data?.message && <p>{data.message}</p>}
             {data?.children}
