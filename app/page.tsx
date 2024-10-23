@@ -165,9 +165,8 @@ export default function Home() {
     }, []);
 
     useEffect(() => {
-        if (treeView !== undefined) {
+        if (treeView !== undefined)
             setTreeView([treeView[0], Object.keys(lStorage).filter(k => lStorage[k].completed).map(k => k.replace("ex-", ""))]);
-        }
     }, [lStorage]);
 
     useEffect(() => {

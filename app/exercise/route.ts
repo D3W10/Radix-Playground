@@ -23,9 +23,9 @@ function getTree(path: string): Promise<FileNode[]> {
         const info = fs.statSync(`${path}/${f}`);
 
         if (info.isDirectory())
-            return { id: "", name: f, files: await getTree(`${path}/${f}`) } as FileNode;
+            return { id: "", name: f, type: "directory", files: await getTree(`${path}/${f}`) } as FileNode;
         else
-            return { id: f.substring(0, f.lastIndexOf(".")), name: await readExercName(`${path}/${f}`), files: [] } as FileNode;
+            return { id: f.substring(0, f.lastIndexOf(".")), name: await readExercName(`${path}/${f}`), type: "file", files: [] } as FileNode;
     }));
 }
 

@@ -14,7 +14,7 @@ export default function TreeView({ className, tree, completed = [], onClick }: T
     function TreeNode({ className, dirClassName, node }: { className?: string, dirClassName?: string, node: FileNode }) {
         const [colapsed, setColapsed] = useState(true);
 
-        return node.files.length > 0 ? (
+        return node.type === "directory" ? (
             <div className={twMerge("space-y-0.5", className)}>
                 <button className={twMerge("w-full p-2 flex items-center relative text-slate-300 hover:bg-slate-900 rounded text-sm space-x-2", dirClassName)} onClick={() => setColapsed(!colapsed)}>
                     <Icon className="w-5 h-5" icon={colapsed ? "folder" : "folder-open"} />
