@@ -1,11 +1,10 @@
 export interface Exercise {
     id: string;
     name: string;
-    description: string;
     validators: {
         check: string;
-        value: string;
-        count?: number;
+        condition: string;
     }[];
+    output: string;
     content: string;
 }

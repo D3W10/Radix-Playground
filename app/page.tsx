@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useRef, useState } from "react";
 import { getPanelElement, ImperativePanelHandle, Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import Editor, { DiffEditor, useMonaco } from "@monaco-editor/react";
+import { minify_sync } from "terser";
 import PanelLayout from "@/app/_src/components/PanelLayout";
 import Icon from "./_src/components/Icon";
 import TreeView from "@/app/_src/components/TreeView";
@@ -37,6 +38,11 @@ export default function Home() {
     const dialogRef = useRef<DialogMethods>(null);
     const monaco = useMonaco();
 
+    const getCodeMinified = () => minify_sync(monaco!.editor.getModels()[0].getValue(), {
+        compress: false,
+        mangle: false
+    }).code;
+
     async function executeCode() {
         setIsRunning(true);
         setConsoleColapsed(false);
@@ -50,19 +56,16 @@ export default function Home() {
             })).json() as ServerResult<EngineRoute>;
 
             if (execResult.status === 0 && execResult.data) {
-                let success = false;
-
-                if (execResult.data.err.length == 0) {
-                    setLogs([false, execResult.data.log]);
-
-                    if (exercise)
-                        success = validateResult(execResult.data) == 0;
-                }
-                else
-                    setLogs([true, execResult.data.err]);
+                setLogs([false, execResult.data]);
 
                 if (exercise)
-                    saveExercise(success);
+                    saveExercise(validateResult(execResult.data) == 0);
+            }
+            else if (execResult.status === 1 && execResult.data) {
+                setLogs([true, execResult.data]);
+
+                if (exercise)
+                    saveExercise(false);
             }
         }
         catch (err) {
@@ -74,13 +77,18 @@ export default function Home() {
 
     function validateResult(data: EngineRoute) {
         let level: 0 | 1 | 2 = 0;
-        const code = monaco!.editor.getModels()[0].getValue().replace(/\/\/.*|\/\*[\s\S]*?\*\//g, "");
+        const code = getCodeMinified();
 
         for (const validator of exercise!.validators) {
-            if (validator.check === "output" && data.log.trim() !== validator.value)
+            const valFybc = new Function("s", `return ${validator.condition}`);
+
+            if (validator.check === "output" && !valFybc(data))
                 level = 2;
-            else if (validator.check === "code" && validator.count && code.matchAll(new RegExp(validator.value, "g")).toArray().length < validator.count)
-                level = level == 0 ? 1 : level;
+            else if (validator.check === "code" && !valFybc(code))
+                level = 1;
+
+            if (level == 2)
+                break;
         }
 
         setRunResult(level);
@@ -113,9 +121,8 @@ export default function Home() {
         setSaveEnabled(false);
 
         const exec = await (await fetch("/exercise/" + id)).json() as ServerResult<Exercise>;
-        if (exec.status === 0) {
+        if (exec.status === 0)
             setExercise(exec.data);
-        }
     }
 
     function saveExercise(completed = false) {
@@ -209,7 +216,7 @@ export default function Home() {
                             <div className={`w-full h-full ${showDiff ? "block" : "hidden"}`}>
                                 <PanelLayout title="Diff" signatureIcon="return" onClick={() => setShowDiff(false)}>
                                     <DiffEditor
-                                        original={exercise?.validators.find(v => v.check == "output")?.value}
+                                        original={exercise?.output}
                                         modified={logs[1]}
                                         theme="galaxy"
                                         options={{ "bracketPairColorization.enabled": false, minimap: { enabled: false }, readOnly: true } as any}
@@ -235,7 +242,7 @@ export default function Home() {
                                                     </div>
                                                     {runResult == 2 && (
                                                         <button onClick={() => setShowDiff(true)}>
-                                                            <p className="text-sm text-slate-500">Click here to compare the result</p>
+                                                            <p className="text-sm text-slate-500">Click here to compare with a possible result</p>
                                                         </button>
                                                     )}
                                                 </div>

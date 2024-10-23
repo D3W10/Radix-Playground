@@ -46,8 +46,8 @@ async function exerciseParser(content: string): Promise<Omit<Exercise, "id">> {
 
     return {
         name: matterResult.data.name,
-        description: matterResult.data.description,
         validators: matterResult.data.validators,
+        output: matterResult.data.output,
         content: processedContent.toString()
     };
 }
