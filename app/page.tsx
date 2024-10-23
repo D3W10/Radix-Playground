@@ -138,7 +138,7 @@ export default function Home() {
 
     async function closeExercise() {
         if (exercise) {
-            if (monaco!.editor.getModels()[0].getValue() !== lStorage[`ex-` + exercise.id].content) {
+            if (lStorage[`ex-` + exercise.id] && monaco!.editor.getModels()[0].getValue() !== lStorage[`ex-` + exercise.id].content) {
                 const dialogResult = await dialogRef.current?.openModal({
                     title: "Unsaved changes",
                     message: "There are unsaved changes on your current exercise that will be lost upon closing. Are you sure you want to continue?",
@@ -153,6 +153,7 @@ export default function Home() {
             setExercise(undefined);
     
             monaco!.editor.getModels()[0].setValue(defaultCode);
+            setSaveEnabled(false);
         }
     }
 
@@ -170,6 +171,16 @@ export default function Home() {
             }
         })();
     }, []);
+
+    const handleUnload = (e: BeforeUnloadEvent) => {
+        e.preventDefault();
+    }
+
+    useEffect(() => {
+        if (saveEnabled)
+            window.addEventListener("beforeunload", handleUnload)
+        return () => window.removeEventListener("beforeunload", handleUnload)
+    }, [saveEnabled]);
 
     useEffect(() => {
         if (treeView !== undefined)
