@@ -286,13 +286,13 @@ export default function Home() {
                                     )}
                                 </PanelLayout>
                             ) : (
-                                <PanelLayout title="Exercise" signatureIcon="home" onClick={closeExercise}>
+                                <PanelLayout title="Exercise" signatureIcon="home" className="w-auto h-auto mr-2 pr-2 overflow-y-auto" onClick={closeExercise}>
                                     {exercise == undefined ? (
                                         <LoadSpinner />
                                     ) : (
-                                        <div className="h-full p-2 space-y-6">
-                                            <h1 className="text-xl font-semibold">{exercise.name}</h1>
-                                            <div className="markdown" dangerouslySetInnerHTML={{ __html: exercise.content }} />
+                                        <div className="p-2 space-y-6 markdown">
+                                            <h1>{exercise.name}</h1>
+                                            <div dangerouslySetInnerHTML={{ __html: exercise.content }} />
                                         </div>
                                     )}
                                 </PanelLayout>

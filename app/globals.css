@@ -27,7 +27,23 @@ html {
 }
 
 .markdown {
-    @apply space-y-2;
+    @apply text-slate-400 space-y-2;
+}
+
+.markdown h1 {
+    @apply mb-6 text-2xl font-semibold text-slate-100;
+}
+
+.markdown p {
+    @apply mb-3;
+}
+
+.markdown a {
+    @apply font-medium underline !text-emerald-500;
+}
+
+.markdown a:hover {
+    @apply text-emerald-300;
 }
 
 .markdown hr {
@@ -39,13 +55,29 @@ html {
 }
 
 .markdown pre {
-    @apply w-full mt-2 mb-4 px-3 py-2 bg-slate-900 rounded;
+    @apply w-full mt-2 mb-4 px-3 py-2 bg-slate-900 rounded-lg;
+}
+
+.markdown strong, .markdown ::marker {
+    @apply text-slate-100;
 }
 
 .markdown ul {
-    @apply pl-8 space-y-1;
+    @apply mb-4 pl-8 space-y-1;
 }
 
 .markdown ul li {
     @apply relative before:content-["\2013"] before:absolute before:-left-6 before:text-emerald-500 before:font-bold;
+}
+
+.markdown ol {
+    @apply mb-4 pl-8 list-decimal space-y-1;
+}
+
+.markdown blockquote {
+    @apply mb-6 p-2 pl-3 bg-emerald-950 border-l-4 border-emerald-500 rounded-lg;
+}
+
+.markdown blockquote p {
+    @apply mb-0;
 }
