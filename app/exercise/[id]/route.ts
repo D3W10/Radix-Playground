@@ -5,14 +5,15 @@ import html from "remark-html";
 import { ServerResult } from "@/app/_src/models/ServerResult.interface";
 import { Exercise } from "@/app/_src/models/Exercise.interface";
 
-export async function GET(_req: Request, { params }: { params: { id: string } }) {
+export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
-        const fileContent = findAndReadFile("./public/exercises/", params.id + ".md");
+        const { id } = await params;
+        const fileContent = findAndReadFile("./public/exercises/", id + ".md");
 
         if (fileContent == null)
             return Response.json({ status: 1 } as ServerResult<Exercise>);
 
-        return Response.json({ status: 0, data: { id: params.id, ...await exerciseParser(fileContent) } } as ServerResult<Exercise>);
+        return Response.json({ status: 0, data: { id: id, ...await exerciseParser(fileContent) } } as ServerResult<Exercise>);
     }
     catch (err) {
         console.error(err);
