@@ -177,10 +177,10 @@ export default function Home() {
     }
 
     useEffect(() => {
-        if (saveEnabled)
+        if (exercise && saveEnabled)
             window.addEventListener("beforeunload", handleUnload)
         return () => window.removeEventListener("beforeunload", handleUnload)
-    }, [saveEnabled]);
+    }, [exercise, saveEnabled]);
 
     useEffect(() => {
         if (treeView !== undefined)
