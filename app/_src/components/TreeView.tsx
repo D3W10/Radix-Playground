@@ -32,9 +32,18 @@ export default function TreeView({ className, tree, completed = [], onClick }: T
         );
     }
 
+    const nodeSort = (nodes: FileNode[]): FileNode[] => nodes
+        .map(n => n.type === "directory" && n.files.length > 0 ? { ...n, files: nodeSort(n.files) } : n)
+        .sort((a, b) => {
+            if (a.type !== b.type)
+                return a.type === "file" ? -1 : 1;
+
+            return a.id.localeCompare(b.id);
+        });
+
     return (
         <div className={twMerge("space-y-0.5", className)}>
-            {tree.map(f => <TreeNode node={f} key={f.id || f.name} />)}
+            {nodeSort(tree).map(f => <TreeNode node={f} key={f.id || f.name} />)}
         </div>
     );
 }
