@@ -76,17 +76,21 @@ export default function Home() {
     }
 
     function validateResult(data: EngineRoute) {
-        let level: 0 | 1 | 2 = 0;
+        let level: 0 | 1 | 2 = 0, i = 1;
         const code = getCodeMinified();
 
+        console.debug(code);
+
         for (const validator of exercise!.validators) {
-            const valFybc = new Function("s", `return ${validator.condition}`);
+            const valFybc = new Function("s", "c", `return ${validator.condition}`);
+            const validation = valFybc(data, code);
 
-            if (validator.check === "output" && !valFybc(data))
-                level = 2;
-            else if (validator.check === "code" && !valFybc(code))
-                level = 1;
+            if (!validation) {
+                console.log("Validation failed on condition " + i);
+                level = validator.check === "output" ? 2 : 1;
+            }
 
+            i++;
             if (level == 2)
                 break;
         }
