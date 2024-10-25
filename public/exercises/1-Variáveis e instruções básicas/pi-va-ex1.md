@@ -2,9 +2,9 @@
 name: Criação de variáveis
 validators:
     - check: output
-      condition: /^\d+$/g.test(s)
+      condition: '/^\d+$/g.test(s)'
     - check: code
-      condition: (s.match(/const/g) || []).length >= 2
+      condition: '(c.match(/const /g) || []).length >= 2'
 output: "10"
 ---
 

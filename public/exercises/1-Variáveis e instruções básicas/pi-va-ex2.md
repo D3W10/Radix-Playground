@@ -2,9 +2,9 @@
 name: Tipos de dados
 validators:
     - check: output
-      condition: s === 'boolean\nobject'
+      condition: 's === "boolean\nobject"'
     - check: code
-      condition: (s.match(/let/g) || []).length === 1
+      condition: '(c.match(/let /g) || []).length === 1'
 output: "boolean\nobject"
 ---
 

@@ -2,9 +2,9 @@
 name: Condições
 validators:
     - check: output
-      condition: s == "true\nfalse"
+      condition: 's === "true\nfalse"'
     - check: code
-      condition: (s.match(/const|let/g) || []).length <= 2
+      condition: '(c.match(/const |let /g) || []).length <= 2'
 output: "true\nfalse"
 ---
 
@@ -48,4 +48,4 @@ Neste exercício, escreve um programa que declare duas variáveis, uma com um va
 
 **Objetivo do exercício:**
 - Aparecer na consola o resultado de ambas as comparações;
-- Criar até 2 variáveis.
+- Criar menos de 2 variáveis.
