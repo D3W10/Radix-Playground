@@ -1,7 +1,10 @@
 import fs from "fs";
 import matter from "gray-matter";
-import { remark } from "remark";
-import html from "remark-html";
+import { unified } from "unified";
+import remarkParse from "remark-parse";
+import remarkRehype from "remark-rehype";
+import rehypeHighlight from "rehype-highlight";
+import rehypeStringify from "rehype-stringify";
 import { ServerResult } from "@/app/_src/models/ServerResult.interface";
 import { Exercise } from "@/app/_src/models/Exercise.interface";
 
@@ -42,7 +45,12 @@ function findAndReadFile(dir: string, filename: string): string | null {
 
 async function exerciseParser(content: string): Promise<Omit<Exercise, "id">> {
     const matterResult = matter(content);
-    const processedContent = await remark().use(html).process(matterResult.content);
+    const processedContent = await unified()
+        .use(remarkParse)
+        .use(remarkRehype)
+        .use(rehypeHighlight)
+        .use(rehypeStringify)
+        .process(matterResult.content);
 
     return {
         name: matterResult.data.name,

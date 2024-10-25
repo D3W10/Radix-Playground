@@ -290,7 +290,7 @@ export default function Home() {
                                     )}
                                 </PanelLayout>
                             ) : (
-                                <PanelLayout title="Exercise" signatureIcon="home" className="w-auto h-auto mr-2 pr-2 overflow-y-auto" onClick={closeExercise}>
+                                <PanelLayout title="Exercise" signatureIcon="home" className={`w-auto ${exercise == undefined ? "h-full" : "h-auto"} mr-2 pr-2 overflow-y-auto`} onClick={closeExercise}>
                                     {exercise == undefined ? (
                                         <LoadSpinner />
                                     ) : (
