@@ -1,12 +1,13 @@
 import fs from "fs";
 import readline from "readline";
 import matter from "gray-matter";
-import { ServerResult } from "../_src/models/ServerResult.interface";
-import { FileNode } from "../_src/models/FileNode.interface";
+import { isDev } from "../_src/utils";
+import { type ServerResult } from "../_src/models/ServerResult.interface";
+import { type FileNode } from "../_src/models/FileNode.interface";
 
 export async function GET() {
     try {
-        const tree = await getTree("./public/exercises");
+        const tree = await getTree(`./${isDev() ? "public/" : ""}exercises`);
 
         return Response.json({ status: 0, data: tree } as ServerResult<FileNode[]>);
     }

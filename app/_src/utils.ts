@@ -5,6 +5,10 @@ export interface ExStore {
     content: string;
 }
 
+export function isDev() {
+    return process.env.NODE_ENV !== "production";
+}
+
 export function cleanInvalidStorageEntries(storage: Storage, tree: FileNode[]) {
     const allFiles = getAllFiles(tree);
 
