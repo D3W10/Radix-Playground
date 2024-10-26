@@ -12,7 +12,7 @@ validators:
 output: "3\n6\n9\n12\n15\n18"
 ---
 
-Neste exercício pretende-se pôr em prática os conhecimentos sobre condições e ciclos aprendidos nos exercícios anteriores. Faz um programa que escreva todos os número até 20 que são divisíveis por `n`.
+Neste exercício pretende-se pôr em prática os conhecimentos sobre condições e ciclos aprendidos nos exercícios anteriores. Escreve um programa que imprima todos os número até 20 que são divisíveis por `n`.
 
 ***
 

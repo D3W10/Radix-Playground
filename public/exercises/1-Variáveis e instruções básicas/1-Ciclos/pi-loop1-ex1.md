@@ -43,7 +43,7 @@ for (let i = 0; i < 5; i++) {
 
 ***
 
-Neste exercício, escreve um programa que escreva na consola todos os números de 0 a 10 utilizando qualquer um dos ciclos apresentados.
+Neste exercício, escreve um programa que imprima na consola todos os números de 0 a 10 utilizando qualquer um dos ciclos apresentados.
 
 ***
 
