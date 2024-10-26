@@ -4,7 +4,7 @@ validators:
     - check: output
       condition: 's === "boolean\nobject"'
     - check: code
-      condition: '(c.match(/let /g) || []).length === 1'
+      condition: 'o.var.filter(v => v === "let").length === 1'
 output: "boolean\nobject"
 ---
 

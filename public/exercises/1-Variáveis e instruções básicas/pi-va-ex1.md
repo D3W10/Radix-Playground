@@ -4,7 +4,7 @@ validators:
     - check: output
       condition: '/^\d+$/g.test(s)'
     - check: code
-      condition: '(c.match(/const /g) || []).length >= 2'
+      condition: 'o.var.filter(v => v === "const").length >= 2'
 output: "10"
 ---
 

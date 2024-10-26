@@ -76,14 +76,23 @@ export default function Home() {
     }
 
     function validateResult(data: EngineRoute) {
-        let level: 0 | 1 | 2 = 0, i = 1;
-        const code = getCodeMinified();
+        let level: 0 | 1 | 2 = 0, i = 1, vars: Record<string, string | number | boolean> = {};
+        const code = getCodeMinified()!;
 
         console.debug(code);
 
+        const rawVars = [...code.matchAll(/\b(?:let|const|var)\s+(\w+)\s*=\s*(\d+|".*?"|true|false)/g)];
+        rawVars.forEach(([_, variable, value]) => vars[variable] = value === "true" ? true : value === "false" ? false : value.startsWith('"') ? value.slice(1, -1) : +value);
+
+        const options = {
+            var: code.match(/let|const/g) ?? [],
+            if: code.match(/if\(/g) ?? [],
+            loop: (code.match(/for\s*\(.*?\)|do\s*\{.*?\}\s*while\s*\(.*?\)|while\s*\(.*?\)/g) ?? []).map(l => (l.match(/[a-z]+/) ?? [])[0])
+        }
+
         for (const validator of exercise!.validators) {
-            const valFybc = new Function("s", "c", `return ${validator.condition}`);
-            const validation = valFybc(data, code);
+            const valFybc = new Function("s", "c", "v", "o", `return ${validator.condition}`);
+            const validation = valFybc(data, code, vars, options);
 
             if (!validation) {
                 console.log("Validation failed on condition " + i);

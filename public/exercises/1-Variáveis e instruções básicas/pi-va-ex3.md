@@ -4,7 +4,7 @@ validators:
     - check: output
       condition: 's === "true\nfalse"'
     - check: code
-      condition: '(c.match(/const |let /g) || []).length <= 2'
+      condition: 'o.var.length <= 2'
 output: "true\nfalse"
 ---
 

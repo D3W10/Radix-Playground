@@ -2,13 +2,13 @@
 name: Ciclos e condições
 validators:
     - check: output
-      condition: '(c.match(/(?<=(const |let )n=)-?\d+/g) || []).length > 0 && s === Array(20).fill(null).map((_, i) => ((i + 1) % +(c.match(/(?<=(const |let )n=)-?\d+/g) || [])[0] === 0 ? i + 1 + "\n" : "")).join("").trimEnd()'
+      condition: 'v.n !== undefined && s === Array(20).fill(null).map((_, i) => ((i + 1) % v.n === 0 ? i + 1 + "\n" : "")).join("").trimEnd()'
     - check: code
-      condition: '(c.match(/(?<!do{(.*)})while\(/g) || []).length > 0'
+      condition: 'o.loop.filter(l => l === "while").length > 0'
     - check: code
-      condition: '(c.match(/const |let /g) || []).length <= 2'
+      condition: 'o.var.length <= 2'
     - check: code
-      condition: '(c.match(/if\(/g) || []).length !== 0'
+      condition: 'o.if.length !== 0'
 output: "3\n6\n9\n12\n15\n18"
 ---
 

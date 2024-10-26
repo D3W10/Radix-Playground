@@ -4,7 +4,7 @@ validators:
     - check: output
       condition: 's === "0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10"'
     - check: code
-      condition: '(c.match(/while|for/g) || []).length > 0'
+      condition: 'o.loop.length > 0'
 output: "0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10"
 ---
 
