@@ -34,7 +34,7 @@ async function readExercName(path: string) {
     const reader = readline.createInterface({ input: stream });
 
     return new Promise<string>(resolve => {
-        let lines = "", start = false;
+        let lines = "", start = false, finish = false;
 
         reader.on("line", line => {
             if (line != "---" || line == "---" && !start) {
@@ -43,12 +43,18 @@ async function readExercName(path: string) {
             }
             else {
                 lines += "---";
+                finish = true;
 
                 reader.close();
                 stream.close();
                 reader.removeAllListeners("line");
                 resolve(matter(lines).data.name);
             }
+        });
+
+        reader.on("close", () => {
+            if (!finish)
+                resolve("<empty>");
         });
     });
 }

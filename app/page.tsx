@@ -136,6 +136,8 @@ export default function Home() {
         const exec = await (await fetch("/exercise/" + id)).json() as ServerResult<Exercise>;
         if (exec.status === 0)
             setExercise(exec.data);
+        else
+            closeExercise();
     }
 
     function saveExercise(completed = false) {
@@ -149,7 +151,15 @@ export default function Home() {
         }
     }
 
-    async function closeExercise() {
+    function closeExercise() {
+        setShowExercise(false);
+        setExercise(undefined);
+
+        monaco!.editor.getModels()[0].setValue(defaultCode);
+        setSaveEnabled(false);
+    }
+
+    async function saveCloseExercise() {
         if (exercise) {
             if (lStorage[`ex-` + exercise.id] && monaco!.editor.getModels()[0].getValue() !== lStorage[`ex-` + exercise.id].content) {
                 const dialogResult = await dialogRef.current?.openModal({
@@ -162,11 +172,7 @@ export default function Home() {
                     return;
             }
 
-            setShowExercise(false);
-            setExercise(undefined);
-    
-            monaco!.editor.getModels()[0].setValue(defaultCode);
-            setSaveEnabled(false);
+            closeExercise();
         }
     }
 
@@ -299,7 +305,7 @@ export default function Home() {
                                     )}
                                 </PanelLayout>
                             ) : (
-                                <PanelLayout title="Exercise" signatureIcon="home" className={`w-auto ${exercise == undefined ? "h-full" : "h-auto"} mr-2 pr-2 overflow-y-auto`} onClick={closeExercise}>
+                                <PanelLayout title="Exercise" signatureIcon="home" className={`w-auto ${exercise == undefined ? "h-full" : "h-auto"} mr-2 pr-2 overflow-y-auto`} onClick={saveCloseExercise}>
                                     {exercise == undefined ? (
                                         <LoadSpinner />
                                     ) : (
