@@ -9,7 +9,7 @@ validators:
       condition: '!c.includes("Math.pow")'
     - check: code
       condition: 'o.var.length === 4'
-output: "0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10"
+output: "6"
 ---
 
 Existem vários tipos de operadores em **JavaScript**:

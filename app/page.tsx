@@ -17,7 +17,7 @@ import type { EngineRoute } from "./engine/route";
 import type { FileNode } from "./_src/models/FileNode.interface";
 import type { Exercise } from "./_src/models/Exercise.interface";
 
-const defaultCode = `console.log("Hello world");`;
+const defaultCode = `// ${(new Date()).toUTCString()}\n\nconsole.log("Hello world");`;
 
 export default function Home() {
     const [lStorage, setLStorage] = useState<Record<string, ExStore>>({});
@@ -28,7 +28,7 @@ export default function Home() {
     const [consoleColapsed, setConsoleColapsed] = useState(false);
     const [isRunning, setIsRunning] = useState(false);
     const [logs, setLogs] = useState<[boolean, string]>([false, ""]);
-    const [runResult, setRunResult] = useState<0 | 1 | 2>();
+    const [runResult, setRunResult] = useState<0 | 1 | 2 | 3>();
     const [showDiff, setShowDiff] = useState(false);
 
     const consoleIsResizing = useRef(false);
@@ -76,7 +76,7 @@ export default function Home() {
     }
 
     function validateResult(data: EngineRoute) {
-        let level: 0 | 1 | 2 = 0, i = 1, vars: Record<string, string | number | boolean> = {};
+        let level: 0 | 1 | 2 | 3 = 0, i = 1, vars: Record<string, string | number | boolean> = {};
         const code = getCodeMinified()!;
 
         console.debug(code);
@@ -85,23 +85,34 @@ export default function Home() {
         rawVars.forEach(([_, variable, value]) => vars[variable] = value === "true" ? true : value === "false" ? false : value.startsWith('"') ? value.slice(1, -1) : +value);
 
         const options = {
+            line: code.split(/\r\n|\r|\n/).length,
             var: code.match(/let|const/g) ?? [],
             if: code.match(/if\(/g) ?? [],
             loop: (code.match(/for\s*\(.*?\)|do\s*\{.*?\}\s*while\s*\(.*?\)|while\s*\(.*?\)/g) ?? []).map(l => (l.match(/[a-z]+/) ?? [])[0])
         }
 
-        for (const validator of exercise!.validators) {
-            const valFybc = new Function("s", "c", "v", "o", `return ${validator.condition}`);
-            const validation = valFybc(data, code, vars, options);
-
-            if (!validation) {
-                console.log("Validation failed on condition " + i);
-                level = validator.check === "output" ? 2 : 1;
+        try {
+            for (const validator of exercise!.validators) {
+                const valFybc = new Function("s", "c", "v", "o", `return ${validator.condition}`);
+                const validation = valFybc(data, code, vars, options);
+    
+                if (!validation) {
+                    console.warn("Validation failed on condition " + i);
+                    level = validator.check === "output" ? 2 : 1;
+                }
+    
+                i++;
+                if (level == 2)
+                    break;
             }
+        }
+        catch (err) {
+            if (err instanceof ReferenceError)
+                console.warn("Validation failed on condition " + i);
+            else
+                console.error(err);
 
-            i++;
-            if (level == 2)
-                break;
+            level = 3;
         }
 
         setRunResult(level);
@@ -235,7 +246,7 @@ export default function Home() {
                                 <PanelLayout title="Editor" signatureIcon={exercise != undefined && saveEnabled ? "save" : undefined} onClick={() => saveExercise()}>
                                     <Editor
                                         defaultValue={defaultCode}
-                                        defaultLanguage="typescript"
+                                        defaultLanguage="javascript"
                                         theme="galaxy"
                                         options={{ "bracketPairColorization.enabled": false, minimap: { enabled: false } } as any}
                                         loading={<LoadSpinner />}
@@ -268,7 +279,7 @@ export default function Home() {
                                                 <div className={`my-6 ${runResult == 0 ? "text-emerald-500" : runResult == 1 ? "text-yellow-500" : "text-red-500"} space-y-2`}>
                                                     <div className="flex items-center space-x-2">
                                                         <Icon className="w-5 h-5" icon={runResult == 0 ? "correct" : runResult == 1 ? "circle" : "wrong"} />
-                                                        <p>{runResult == 0 ? "Output and requirements were met" : runResult == 1 ? "Correct output but some requirements were not met" : "Wrong output"}</p>
+                                                        <p>{runResult == 0 ? "Output and requirements were met" : runResult == 1 ? "Correct output but some requirements were not met" : runResult == 2 ? "Wrong output" : "Some required variables were not defined"}</p>
                                                     </div>
                                                     {runResult == 2 && (
                                                         <button onClick={() => setShowDiff(true)}>
