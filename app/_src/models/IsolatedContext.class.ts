@@ -29,7 +29,7 @@ export class IsolatedContext {
         `);
 
         try {
-            await context.eval(code, { timeout: this.timeout });
+            await context.eval("\"use strict\";" + code, { timeout: this.timeout });
 
             return {
                 success: true,

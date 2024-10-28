@@ -55,13 +55,13 @@ export default function Home() {
                 body: JSON.stringify({ code: monaco!.editor.getModels()[0].getValue() })
             })).json() as ServerResult<EngineRoute>;
 
-            if (execResult.status === 0 && execResult.data) {
+            if (execResult.status === 0 && execResult.data !== undefined) {
                 setLogs([false, execResult.data]);
 
                 if (exercise)
                     saveExercise(validateResult(execResult.data) == 0);
             }
-            else if (execResult.status === 1 && execResult.data) {
+            else if (execResult.status === 1 && execResult.data !== undefined) {
                 setLogs([true, execResult.data]);
 
                 if (exercise)
@@ -283,7 +283,7 @@ export default function Home() {
                         <Panel id="consolePanel" className="min-w-48 min-h-12" defaultSize={25} ref={consolePanel} onResize={onConsoleResize}>
                             <PanelLayout title="Console" className={`w-auto mr-2 pr-2 flex ${isRunning || logs[1].length == 0 ? "justify-center items-center" : ""} overflow-y-auto`} signatureIcon={!consoleColapsed ? "chevron-down" : "chevron-up"} ref={consolePanelLayoutHtml} onClick={() => setConsoleColapsed(!consoleColapsed)}>
                                 {!isRunning ?
-                                    logs[1].length == 0 ? (
+                                    logs[1].length === 0 && runResult === undefined ? (
                                         <p className="text-sm text-slate-500">Nothing to see here</p>
                                     ) : ( 
                                         <div className={`w-full h-fit min-h-full px-4 ${logs[0] ? "text-red-400" : ""}`}>
