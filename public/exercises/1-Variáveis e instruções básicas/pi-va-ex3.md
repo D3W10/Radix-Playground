@@ -30,7 +30,7 @@ if ("7" - 3 == 4) {
 }
 ```
 
-Neste exemplo a condição também seria verdadeira, como o operador `-` só pode ser utilizado entre 2 números, a linguagem vai tentar converter a string para um valor numérico que depois será comparado com o número 4.
+Neste exemplo a condição também seria verdadeira, como o operador `-` só pode ser utilizado entre 2 números, a linguagem vai tentar converter a *string* para um valor numérico que depois será comparado com o número 4.
 
 Por mais que este fenómeno pode parecer útil para algumas situações, pode também resultar em problemas já que a forma de lidar com texto não é a mesma de com números, especialmente às ações que podem ser realizadas com esses valores.
 
@@ -42,7 +42,7 @@ Para evitar este problema, apareceram os operadores strict (`===` e `!==`) que v
 
 ***
 
-Neste exercício, escreve um programa que declare duas variáveis, uma com um valor `string` (ex: "8") e outra com um valor `number` correspondente (ex: 8). Este programa deve escrever na consola o resultado da sua comparação usando o operador `==` e o operador `===`.
+Neste exercício, escreve um programa que declare duas variáveis, uma com um valor *string* (ex: "8") e outra com um valor `number` correspondente (ex: 8). Este programa deve escrever na consola o resultado da sua comparação usando o operador `==` e o operador `===`.
 
 ***
 

@@ -36,7 +36,7 @@ O tipo de dados `null` que está presente em outras linguagens, em JavaScript re
 
 ***
 
-Para obter o valor atual de uma variável, utiliza-se o operador `typeof` que devolve uma string com o tipo de dados dessa variável:
+Para obter o valor atual de uma variável, utiliza-se o operador `typeof` que devolve uma *string* com o tipo de dados dessa variável:
 
 ```js
 let num = 15;

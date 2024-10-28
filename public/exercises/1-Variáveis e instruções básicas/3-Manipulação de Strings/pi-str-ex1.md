@@ -12,7 +12,7 @@ validators:
 output: "O produto Colgate tem um preço baixo e é fornecido por Auchan"
 ---
 
-Em **JavaScript**, existem várias formas de representar uma string:
+Em **JavaScript**, existem várias formas de representar uma *string*:
 
 ```js
 "Utilizando aspas"
@@ -20,17 +20,17 @@ Em **JavaScript**, existem várias formas de representar uma string:
 `Utilizando acentos graves`
 ```
 
-Cada uma destas formas pode ser utilizada de forma intercalar, especialmente se a `string` em si tiver o caractere delimitador.
+Cada uma destas formas pode ser utilizada de forma intercalar, especialmente se a *string* em si tiver o caractere delimitador.
 
 ```js
 "Uma vem alguém disse: \"Um dia a vida será bela\""
 'Uma vem alguém disse: "Um dia a vida será bela"'
 ```
 
-> É utilizada a `\` para "escapar" um caractere delimitador. Para que a string tenha uma `\` é necessário escrever duas `\\`.
+> É utilizada a `\` para "escapar" um caractere delimitador. Para que a *string* tenha uma `\` é necessário escrever duas `\\`.
 > Para além disso existem vários caracteres que podem ser aceditos utilizando a `\` como `\n` para quebra de linha, `\t` para tabulação, `\0` para o caractere `null`, entre outros.
 
-Enquanto que usar aspas ou plicas a string resultante é a mesma, ao utilizar acentos graves criamos o que se chama de *template literal* que permite strings com várias linhas, uma fácil interpolação de strings e até *tagged templates* (que não serão abordados, para os [curiosos](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#tagged_templates)).
+Enquanto que usar aspas ou plicas a *string* resultante é a mesma, ao utilizar acentos graves criamos o que se chama de *template literal* que permite *strings* com várias linhas, uma fácil interpolação de *strings* e até *tagged templates* (que não serão abordados, para os [curiosos](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#tagged_templates)).
 
 ```js
 const msg = "Uma vem alguém disse:\n" +
@@ -40,9 +40,9 @@ const msg2 = `Uma vem alguém disse:
     Um dia a vida será bela`;
 ```
 
-> *Template literals* permitem que o novas linhas façam parte da `string` sem a utilização do `\n`.
+> *Template literals* permitem que o novas linhas façam parte da *string* sem a utilização do `\n`.
 
-As *Template literals* tornam-se bastante uteis quando precisamos criar strings dinâmicas que juntam valores de variáveis com texto pré-definido. Tomemos este exeplo que foi utilizado no exercício anterior:
+As *Template literals* tornam-se bastante uteis quando precisamos criar *strings* dinâmicas que juntam valores de variáveis com texto pré-definido. Tomemos este exeplo que foi utilizado no exercício anterior:
 
 ```js
 const name = "Ana";
@@ -81,7 +81,7 @@ Pretende-se que o programa escreva na consola uma frase com a seguinte estrutura
 O produto <name> tem um preço <op1> e é fornecido por <op2>
 ```
 
-Onde `<op1>` é "baixo" ou "alto" se `price` for menor ou maior a 10€ e `<op2>` é o valor de `supplier` se a string não estiver vazia ou então "Continente".
+Onde `<op1>` é "baixo" ou "alto" se `price` for menor ou maior a 10€ e `<op2>` é o valor de `supplier` se a *string* não estiver vazia ou então "Continente".
 
 ***
 

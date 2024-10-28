@@ -32,7 +32,7 @@ Os operadores aritméticos são utilizados para realizar operações matemática
 9. `-` Negação unária (Quando usado antes de um número ou variável, devolve o seu simétrico);
 10. `+` Mais unário (Quando usado antes de um valor ou variável, *tenta converter-lo* para um número).
 
-> O *mais unário* vai ser bastante útil para converter valores do tipo `string` para números, por exemplo `+"8"` devolveria o valor `8`.
+> O *mais unário* vai ser bastante útil para converter valores do tipo *string* para números, por exemplo `+"8"` devolveria o valor `8`.
 
 Os operadores de comparação são usados para comparar 2 valores e devolvem um valor booleano correspondente a essa comparação. Como visto anteriormente são eles o `==`, `===`, `!=`, `!==`, `>`, `<`, `>=` e `<=`.
 

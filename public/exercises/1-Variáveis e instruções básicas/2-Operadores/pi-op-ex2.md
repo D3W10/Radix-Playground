@@ -35,7 +35,7 @@ let res = condition ? "Verdadeiro" : "Falso";
 
 ***
 
-O último operador que vamos ver é o operador de concatenação (`+`), que permite concatenar duas strings. Vejamos um exemplo de uso:
+O último operador que vamos ver é o operador de concatenação (`+`), que permite concatenar duas *strings*. Vejamos um exemplo de uso:
 
 ```js
 const name = "Ana";
@@ -43,7 +43,7 @@ const name = "Ana";
 console.log("O meu nome é " + name); // O meu nome é Ana
 ```
 
-> Como visto até agora, o `+` pode ser utilizado tanto para somas como para concatenação de strings. O ambiente de execução determina qual operação utilizar de acordo com os tipos de dados dos valores. Se houver pelo menos um valor do tipo `string`, a concatenação será usada, caso contrário fará a soma.
+> Como visto até agora, o `+` pode ser utilizado tanto para somas como para concatenação de *strings*. O ambiente de execução determina qual operação utilizar de acordo com os tipos de dados dos valores. Se houver pelo menos um valor do tipo *string*, a concatenação será usada, caso contrário fará a soma.
 > ```js
 > 1 + 2 // 3
 > "1" + 2 // "12"
