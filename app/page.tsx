@@ -81,8 +81,21 @@ export default function Home() {
 
         console.debug(code);
 
-        const rawVars = [...code.matchAll(/\b(?:let|const|var)\s+(\w+)\s*=\s*(\d+|".*?"|true|false)/g)];
-        rawVars.forEach(([_, variable, value]) => vars[variable] = value === "true" ? true : value === "false" ? false : value.startsWith('"') ? value.slice(1, -1) : +value);
+        const rawVars = [...code.matchAll(/\b(?:let|const|var)\s+(\w+)\s*=\s*(\d+|".*?"|true|false|\[.*?\]|\{.*?\})/g)];
+        rawVars.forEach(([_, variable, value]) => {
+            if (value === "true")
+                vars[variable] = true;
+            else if (value === "false")
+                vars[variable] = false;
+            else if (value.startsWith('"'))
+                vars[variable] = value.slice(1, -1);
+            else if (value.startsWith("["))
+                vars[variable] = JSON.parse(value);
+            else if (value.startsWith("{"))
+                vars[variable] = JSON.parse(value.replace(/(\w+):/g, '"$1":'));
+            else
+                vars[variable] = +value;
+        });
 
         const options = {
             line: code.split(/\r\n|\r|\n/).length,
