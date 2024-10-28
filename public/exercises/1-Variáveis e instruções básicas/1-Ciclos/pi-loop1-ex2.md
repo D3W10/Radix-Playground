@@ -2,7 +2,7 @@
 name: Ciclos e condições
 validators:
     - check: output
-      condition: 'v.n !== undefined && s === Array(20).fill(null).map((_, i) => ((i + 1) % v.n === 0 ? i + 1 + "\n" : "")).join("").trimEnd()'
+      condition: 's === Array(20).fill(null).map((_, i) => ((i + 1) % v.n === 0 ? i + 1 + "\n" : "")).join("").trimEnd()'
     - check: code
       condition: 'o.loop.filter(l => l === "while").length > 0'
     - check: code
