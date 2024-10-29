@@ -299,7 +299,11 @@ export default function Home() {
                                         <p className="text-sm text-slate-500">Nothing to see here</p>
                                     ) : ( 
                                         <div className={`w-full h-fit min-h-full px-4 ${logs[0] ? "text-red-400" : ""}`}>
-                                            <pre className="text-sm font-mono">{logs[1]}</pre>
+                                            {logs[1].length !== 0 ? (
+                                                <pre className="text-sm font-mono">{logs[1]}</pre>
+                                            ) : (
+                                                <p className="text-sm text-slate-500 font-mono">Output log is empty</p>
+                                            )}
                                             {runResult != undefined && (
                                                 <div className={`my-6 ${runResult == 0 ? "text-emerald-500" : runResult == 1 ? "text-yellow-500" : "text-red-500"} space-y-2`}>
                                                     <div className="flex items-center space-x-2">
