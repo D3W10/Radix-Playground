@@ -101,7 +101,18 @@ export default function Home() {
             line: code.split(/\r\n|\r|\n/).length,
             var: code.match(/let|const/g) ?? [],
             if: code.match(/if\(/g) ?? [],
-            loop: (code.match(/for\s*\(.*?\)|do\s*\{.*?\}\s*while\s*\(.*?\)|while\s*\(.*?\)/g) ?? []).map(l => (l.match(/[a-z]+/) ?? [])[0]),
+            loop: (code.match(/while(?=\(.*?\))|do\{.*?\}while\(.*?\)|for\(.*?\)/g) ?? []).map(l => {
+                if (l.startsWith("do"))
+                    return "do while";
+                else if (l.startsWith("for") && l.includes(";"))
+                    return "for";
+                else if (l.startsWith("for") && l.includes("of"))
+                    return "for of";
+                else if (l.startsWith("for") && l.includes("in"))
+                    return "for in";
+                else
+                    return l;
+            }),
             func: code.match(/function\s*\w*(?=\()|(?<=\([\w,]*\))=>|(?<=\w*)=>/g) ?? []
         }
 

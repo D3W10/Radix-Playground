@@ -63,6 +63,8 @@ function soma(a, b) {
 
 const resultado = soma(5, 10); // 15
 ```
+
+> Funções declaradas com a *keyword* `function` podem ser chamadas antes da sua declaração, ao contrário de linguagens como C.
  
 ***
 

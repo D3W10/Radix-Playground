@@ -26,6 +26,6 @@
     color: #FFBF47;
 }
 
-.hljs-subst {
+.hljs-subst, .hljs-built_in {
     color: #8ADEFF;
 }
