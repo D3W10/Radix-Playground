@@ -1,14 +1,14 @@
 ---
 name: Funções
 validators:
-    - check: output
-      condition: 's === Math.pow(+(c.match(/(?<=power\()\d+(?=\))/) ?? [])[0], 2).toString()'
-    - check: code
-      condition: '!c.includes("Math")'
-    - check: code
-      condition: 'o.func.length >= 1'
-    - check: code
-      condition: 'o.line <= 5'
+-   check: output
+    condition: 's === Math.pow(+(c.match(/(?<=power\()\d+(?=\))/) ?? [])[0], 2).toString()'
+-   check: code
+    condition: '!c.includes("Math")'
+-   check: code
+    condition: 'o.func.length >= 1'
+-   check: code
+    condition: 'o.line <= 5'
 output: "16"
 ---
 

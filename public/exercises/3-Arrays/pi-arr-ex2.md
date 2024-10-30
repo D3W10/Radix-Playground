@@ -1,18 +1,18 @@
 ---
 name: Ciclo For Of
 validators:
-    - check: output
-      condition: 's === "20"'
-    - check: code
-      condition: '!c.includes(".includes") && !c.includes(".every")'
-    - check: code
-      condition: 'o.loop.every(l => l === "for of")'
-    - check: code
-      condition: 'o.loop.length >= 1'
-    - check: code
-      condition: 'o.func.length >= 1'
-    - check: code
-      condition: 'o.var.length <= 4'
+-   check: output
+    condition: 's === "20"'
+-   check: code
+    condition: '!c.includes(".includes") && !c.includes(".every")'
+-   check: code
+    condition: 'o.loop.every(l => l === "for of")'
+-   check: code
+    condition: 'o.loop.length >= 1'
+-   check: code
+    condition: 'o.func.length >= 1'
+-   check: code
+    condition: 'o.var.length <= 4'
 output: "20"
 ---
 

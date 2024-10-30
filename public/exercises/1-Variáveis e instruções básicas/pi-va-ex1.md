@@ -1,10 +1,10 @@
 ---
 name: Criação de variáveis
 validators:
-    - check: output
-      condition: '/^\d+$/g.test(s)'
-    - check: code
-      condition: 'o.var.filter(v => v === "const").length >= 2'
+-   check: output
+    condition: '/^\d+$/g.test(s)'
+-   check: code
+    condition: 'o.var.filter(v => v === "const").length >= 2'
 output: "10"
 ---
 

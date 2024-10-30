@@ -1,15 +1,16 @@
 ---
 name: Introdução aos Operadores
 validators:
-    - check: output
-      condition: 's === Math.pow(v.n, v.m).toString()'
-    - check: code
-      condition: 'c.includes("*=")'
-    - check: code
-      condition: '!c.includes("Math.pow")'
-    - check: code
-      condition: 'o.var.length === 4'
+-   check: output
+    condition: 's === Math.pow(v.n, v.m).toString()'
+-   check: code
+    condition: 'c.includes("*=")'
+-   check: code
+    condition: '!c.includes("Math.pow")'
+-   check: code
+    condition: 'o.var.length === 4'
 output: "6"
+varParse: true
 ---
 
 Existem vários tipos de operadores em **JavaScript**:

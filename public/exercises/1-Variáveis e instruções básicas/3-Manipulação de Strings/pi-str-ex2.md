@@ -1,12 +1,12 @@
 ---
 name: Métodos sobre Strings
 validators:
-    - check: output
-      condition: 's === "A VIDA É BELA\n13"'
-    - check: code
-      condition: 'c.includes("original.substring(8).replace(\"será\",\"é\").toUpperCase()") || c.includes("original.substring(8).toUpperCase().replace(\"SERÁ\",\"É\")")'
-    - check: code
-      condition: 'o.var.length === 2'
+-   check: output
+    condition: 's === "A VIDA É BELA\n13"'
+-   check: code
+    condition: 'c.includes("original.substring(8).replace(\"será\",\"é\").toUpperCase()") || c.includes("original.substring(8).toUpperCase().replace(\"SERÁ\",\"É\")")'
+-   check: code
+    condition: 'o.var.length === 2'
 output: "A VIDA É BELA\n13"
 ---
 

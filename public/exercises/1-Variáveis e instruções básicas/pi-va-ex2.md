@@ -1,10 +1,10 @@
 ---
 name: Tipos de dados
 validators:
-    - check: output
-      condition: 's === "boolean\nobject"'
-    - check: code
-      condition: 'o.var.filter(v => v === "let").length === 1'
+-   check: output
+    condition: 's === "boolean\nobject"'
+-   check: code
+    condition: 'o.var.filter(v => v === "let").length === 1'
 output: "boolean\nobject"
 ---
 

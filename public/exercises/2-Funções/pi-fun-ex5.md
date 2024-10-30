@@ -1,14 +1,14 @@
 ---
 name: Funções recursivas
 validators:
-    - check: output
-      condition: 's === "1\n2\n6\n24\n120"'
-    - check: code
-      condition: 'o.func.length >= 1'
-    - check: code
-      condition: '(c.match(/factorial\(/g) ?? []).length === 3'
-    - check: code
-      condition: 'o.var.length === 1'
+-   check: output
+    condition: 's === "1\n2\n6\n24\n120"'
+-   check: code
+    condition: 'o.func.length >= 1'
+-   check: code
+    condition: '(c.match(/factorial\(/g) ?? []).length === 3'
+-   check: code
+    condition: 'o.var.length === 1'
 output: "1\n2\n6\n24\n120"
 ---
 

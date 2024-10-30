@@ -1,12 +1,12 @@
 ---
 name: Ternário e Concatenação
 validators:
-    - check: output
-      condition: 's === "1 é ímpar\n2 é par\n3 é ímpar\n4 é par\n5 é ímpar\n6 é par\n7 é ímpar\n8 é par\n9 é ímpar\n10 é par"'
-    - check: code
-      condition: 'o.if.length === 0'
-    - check: code
-      condition: 'o.var.length <= 2'
+-   check: output
+    condition: 's === "1 é ímpar\n2 é par\n3 é ímpar\n4 é par\n5 é ímpar\n6 é par\n7 é ímpar\n8 é par\n9 é ímpar\n10 é par"'
+-   check: code
+    condition: 'o.if.length === 0'
+-   check: code
+    condition: 'o.var.length <= 2'
 output: "1 é ímpar\n2 é par\n3 é ímpar\n4 é par\n5 é ímpar\n6 é par\n7 é ímpar\n8 é par\n9 é ímpar\n10 é par"
 ---
 

@@ -1,12 +1,12 @@
 ---
 name: Funções anónimas e lambdas
 validators:
-    - check: output
-      condition: 's === "14\n61"'
-    - check: code
-      condition: 'o.func.toString() == "function sumWithModifier,=>,=>"'
-    - check: code
-      condition: 'o.var.length === 0'
+-   check: output
+    condition: 's === "14\n61"'
+-   check: code
+    condition: 'o.func.toString() == "function sumWithModifier,=>,=>"'
+-   check: code
+    condition: 'o.var.length === 0'
 output: "14\n61"
 ---
 

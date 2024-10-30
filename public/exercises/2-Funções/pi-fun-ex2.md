@@ -1,12 +1,12 @@
 ---
 name: Valores padrão
 validators:
-    - check: output
-      condition: 's === "5.5€\n8.61€"'
-    - check: code
-      condition: 'o.func.length >= 1'
-    - check: code
-      condition: 'o.var.length === 0'
+-   check: output
+    condition: 's === "5.5€\n8.61€"'
+-   check: code
+    condition: 'o.func.length >= 1'
+-   check: code
+    condition: 'o.var.length === 0'
 output: "5.5€\n8.61€"
 ---
 

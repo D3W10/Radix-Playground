@@ -1,16 +1,16 @@
 ---
 name: Funções nested
 validators:
-    - check: output
-      condition: 's === (Math.pow(+(c.match(/hipotQuad\((\d+),\s*(\d+)\)/) ?? [])[1], 2) + Math.pow(+(c.match(/hipotQuad\((\d+),\s*(\d+)\)/) ?? [])[2], 2)).toString()'
-    - check: code
-      condition: '!c.includes("Math")'
-    - check: code
-      condition: 'o.func.length >= 2'
-    - check: code
-      condition: '(c.match(/function\shipotQuad\([\w,]*\){function\squadrado\([\w,]*\){/) ?? []).length !== 0'
-    - check: code
-      condition: 'o.var.length === 0'
+-   check: output
+    condition: 's === (Math.pow(+(c.match(/hipotQuad\((\d+),\s*(\d+)\)/) ?? [])[1], 2) + Math.pow(+(c.match(/hipotQuad\((\d+),\s*(\d+)\)/) ?? [])[2], 2)).toString()'
+-   check: code
+    condition: '!c.includes("Math")'
+-   check: code
+    condition: 'o.func.length >= 2'
+-   check: code
+    condition: '(c.match(/function\shipotQuad\([\w,]*\){function\squadrado\([\w,]*\){/) ?? []).length !== 0'
+-   check: code
+    condition: 'o.var.length === 0'
 output: "20"
 ---
 

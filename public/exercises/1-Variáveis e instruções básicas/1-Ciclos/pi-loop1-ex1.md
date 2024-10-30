@@ -1,10 +1,10 @@
 ---
 name: While, Do While e For
 validators:
-    - check: output
-      condition: 's === "0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10"'
-    - check: code
-      condition: 'o.loop.length > 0'
+-   check: output
+    condition: 's === "0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10"'
+-   check: code
+    condition: 'o.loop.length > 0'
 output: "0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10"
 ---
 

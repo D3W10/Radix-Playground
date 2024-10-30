@@ -1,13 +1,14 @@
 ---
 name: Introdução aos Arrays
 validators:
-    - check: output
-      condition: 's === v.data.join("\n") + "\n" + v.data.length'
-    - check: code
-      condition: 'o.loop.length === 1'
-    - check: code
-      condition: 'o.var.length === 2'
+-   check: output
+    condition: 's === v.data.join("\n") + "\n" + v.data.length'
+-   check: code
+    condition: 'o.loop.length === 1'
+-   check: code
+    condition: 'o.var.length === 2'
 output: "Valor 1\nValor 2\nValor 3\nValor 4\nValor 5\n5"
+varParse: true
 ---
 
 Com o objetivo de agrupar conjuntos de dados com o mesmo significado, tal como em outras linguagens, **JavaScript** permite a criação de *arrays* para armazenar esses dados.

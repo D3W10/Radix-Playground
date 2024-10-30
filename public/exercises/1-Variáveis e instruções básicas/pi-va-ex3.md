@@ -1,10 +1,10 @@
 ---
 name: Condições
 validators:
-    - check: output
-      condition: 's === "true\nfalse"'
-    - check: code
-      condition: 'o.var.length <= 2'
+-   check: output
+    condition: 's === "true\nfalse"'
+-   check: code
+    condition: 'o.var.length <= 2'
 output: "true\nfalse"
 ---
 

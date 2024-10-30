@@ -1,14 +1,14 @@
 ---
 name: Referências para funções
 validators:
-    - check: output
-      condition: 's === "Nome: Ana, Idade: 25"'
-    - check: code
-      condition: 'c.includes("console.log)")'
-    - check: code
-      condition: 'o.func.toString() === "function printUserToFunction"'
-    - check: code
-      condition: 'o.var.length === 0'
+-   check: output
+    condition: 's === "Nome: Ana, Idade: 25"'
+-   check: code
+    condition: 'c.includes("console.log)")'
+-   check: code
+    condition: 'o.func.toString() === "function printUserToFunction"'
+-   check: code
+    condition: 'o.var.length === 0'
 output: "Nome: Ana, Idade: 25"
 ---
 

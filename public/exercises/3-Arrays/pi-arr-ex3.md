@@ -1,14 +1,14 @@
 ---
 name: Métodos em Arrays
 validators:
-    - check: output
-      condition: 's === "Dança Decisão Destino Diamante"'
-    - check: code
-      condition: 'o.loop.every(l => l === "for of")'
-    - check: code
-      condition: 'o.loop.length >= 1'
-    - check: code
-      condition: 'o.func.length >= 1'
+-   check: output
+    condition: 's === "Dança Decisão Destino Diamante"'
+-   check: code
+    condition: 'o.loop.every(l => l === "for of")'
+-   check: code
+    condition: 'o.loop.length >= 1'
+-   check: code
+    condition: 'o.func.length >= 1'
 output: "Dança Decisão Destino Diamante"
 ---
 

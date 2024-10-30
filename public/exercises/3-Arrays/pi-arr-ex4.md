@@ -1,10 +1,10 @@
 ---
 name: Arrays e Strings
 validators:
-    - check: output
-      condition: 's === "44 10 2"'
-    - check: code
-      condition: 'o.func.length >= 2'
+-   check: output
+    condition: 's === "44 10 2"'
+-   check: code
+    condition: 'o.func.length >= 2'
 output: "44 10 2"
 ---
 

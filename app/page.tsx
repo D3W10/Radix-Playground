@@ -81,27 +81,29 @@ export default function Home() {
 
         console.debug(code);
 
-        const rawVars = [...code.matchAll(/\b(?:let|const|var)\s+(\w+)\s*=\s*(\d+|".*?"|true|false|\[.*?\]|\{.*?\})/g)];
-        rawVars.forEach(([_, variable, value]) => {
-            if (value === "true")
-                vars[variable] = true;
-            else if (value === "false")
-                vars[variable] = false;
-            else if (value.startsWith('"'))
-                vars[variable] = value.slice(1, -1);
-            else if (value.startsWith("["))
-                vars[variable] = JSON.parse(value);
-            else if (value.startsWith("{"))
-                vars[variable] = JSON.parse(value.replace(/(\w+):/g, '"$1":'));
-            else
-                vars[variable] = +value;
-        });
+        if (exercise && exercise.varParse) {
+            const rawVars = [...code.matchAll(/\b(?:let|const|var)\s+(\w+)\s*=\s*(\d+|".*?"|true|false|\[.*?\]|\{.*?\})/g)];
+            rawVars.forEach(([_, variable, value]) => {
+                if (value === "true")
+                    vars[variable] = true;
+                else if (value === "false")
+                    vars[variable] = false;
+                else if (value.startsWith('"'))
+                    vars[variable] = value.slice(1, -1);
+                else if (value.startsWith("["))
+                    vars[variable] = JSON.parse(value);
+                else if (value.startsWith("{"))
+                    vars[variable] = JSON.parse(value.replace(/(\w+):/g, '"$1":'));
+                else
+                    vars[variable] = +value;
+            });
+        }
 
         const options = {
             line: code.split(/\r\n|\r|\n/).length,
             var: code.match(/let|const/g) ?? [],
             if: code.match(/if\(/g) ?? [],
-            loop: (code.match(/while(?=\(.*?\))|do\{.*?\}while\(.*?\)|for\(.*?\)/g) ?? []).map(l => {
+            loop: (code.match(/while(?=\(.*?\))|do\{.*?\}while\(.*?\)|for\(.*?\)|\.forEach\(.*?\)/g) ?? []).map(l => {
                 if (l.startsWith("do"))
                     return "do while";
                 else if (l.startsWith("for") && l.includes(";"))
@@ -110,6 +112,8 @@ export default function Home() {
                     return "for of";
                 else if (l.startsWith("for") && l.includes("in"))
                     return "for in";
+                else if (l.startsWith(".forEach"))
+                    return "for each";
                 else
                     return l;
             }),
