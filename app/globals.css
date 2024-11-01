@@ -10,6 +10,10 @@ html {
     @apply outline outline-2 outline-emerald-500;
 }
 
+::selection {
+    @apply bg-slate-50/15;
+}
+
 ::-webkit-scrollbar {
     @apply w-2 h-2;
 }

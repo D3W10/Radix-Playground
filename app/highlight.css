@@ -22,10 +22,10 @@
     color: #80A8FF;
 }
 
-.hljs-title.class_ {
+.hljs-params, .hljs-title.class_ {
     color: #FFBF47;
 }
 
-.hljs-subst, .hljs-built_in {
+.hljs-function, .hljs-subst, .hljs-built_in {
     color: #8ADEFF;
 }
