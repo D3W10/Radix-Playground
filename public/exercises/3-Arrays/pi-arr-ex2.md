@@ -41,6 +41,8 @@ for (const char of data)
     console.log(char); // h e l l o
 ```
 
+> É também possível obter um caractere expecífico de uma *string* através de seu índice, por exemplo `data[0]` iria devolver o caractere "h".
+
 ***
 
 Neste exercício, escreve um programa que conte as vogais de uma *string* e imprima na consola a contagem total. O programa deve recorrer a uma função `countVowels` que recebe como parâmetro a *string* a analisar e devolve o número de vogais encontradas. Para testar a função, chama-a passando o valor *string* "pneumoultramicroscopicossilicovulcanoconiótico".

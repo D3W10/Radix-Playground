@@ -55,7 +55,7 @@ console.log(data.length); // 5
 
 ***
 
-Neste exercício, escreve um programa que consiste numa função `joinWordsWith` que recebe um array de *strings* como parâmetro e uma outra *string* que equivale aos caracteres iniciais da palavra a filtrar. Em síntese, a função pega no *array* de palavras inicial, percorre-o e verifica se a palavra começa com o valor passado por parâmetro, armazenando essas palavras num outro *array* temporário. A função deverá devolver uma *string* com as palavras do *array* separadas por espaços de forma inversa.
+Neste exercício, escreve um programa que consiste numa função `joinWordsWith` que recebe um *array* de *strings* como parâmetro e uma outra *string* que equivale aos caracteres iniciais da palavra a filtrar. Em síntese, a função pega no *array* de palavras inicial, percorre-o e verifica se a palavra começa com o valor passado por parâmetro, armazenando essas palavras num outro *array* temporário. A função deverá devolver uma *string* com as palavras do *array* separadas por espaços de forma inversa.
 
 Para testar a função, chame-a passando o *array* `["Diamante", "Destino", "Estrela", "Horizonte", "Decisão", "Relógio", "Conquista", "Labirinto", "Dança", "Sabedoria"]` e a *string* `D`.
 
