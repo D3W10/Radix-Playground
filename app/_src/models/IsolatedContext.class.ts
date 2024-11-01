@@ -23,7 +23,7 @@ export class IsolatedContext {
         await context.eval(`
             const console = {
                 log: function(...args) {
-                    _log.apply(null, args);
+                    _log.apply(null, args.map(a => a.toString()));
                 }
             };
         `);
