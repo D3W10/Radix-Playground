@@ -14,7 +14,7 @@
     color: #C8FF75;
 }
 
-.hljs-variable {
+.hljs-variable, .hljs-property {
     color: #FF6169;
 }
 
@@ -26,6 +26,6 @@
     color: #FFBF47;
 }
 
-.hljs-function, .hljs-subst, .hljs-built_in {
+.hljs-function, .hljs-attr, .hljs-subst, .hljs-built_in {
     color: #8ADEFF;
 }
