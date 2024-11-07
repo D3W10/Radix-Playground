@@ -2,7 +2,9 @@
 name: Introdução aos Objetos
 validators:
 -   check: output
-    condition: 's === "Daniel\n20"'
+    condition: '/^Daniel\n(20)\n(?!\1)\d+$/g.test(s)'
+-   check: code
+    condition: 'c.includes("student.age=")'
 -   check: code
     condition: 'o.var.length === 1'
 output: "Daniel\n20\n21"
@@ -54,7 +56,7 @@ console.log(obj.key2); // "21"
 console.log(obj.key5.key6); // "newValue"
 ```
 
-Voltando um bocadinho atrás, uma chave de um objeto tem de ser sempre do tipo *string*, as aspas da chave são opcionais **se** não conter nenhum caractere inválido (segue as mesmas regras de nomes de variáveis), eis um exemplo:
+Voltando um bocadinho atrás, as chaves de um objeto têm de ser do tipo *string* ou *number*, sendo as aspas da chave opcionais **se** a mesma apenas tiver caracteres alfanuméricos, eis um exemplo:
 
 ```js
 const obj = {
@@ -63,7 +65,8 @@ const obj = {
     'key3': "value3", // Válido
     key-4: "value4", // Inválido
     5key: "value5", // Inválido
-    <key6>: "value6" // Inválido
+    <key6>: "value6", // Inválido
+    7: "value7" // Válido
 };
 ```
 
