@@ -2,14 +2,15 @@
 name: Strings em JavaScript
 validators:
 -   check: output
-    condition: 's === `O produto ${v.name} tem um preço ${v.price < 10 ? "baixo" : "alto"} e é fornecido por ${v.supplier || "Continente"}`'
+    condition: 's === `"O produto ${v.name} tem um preço ${v.price < 10 ? "baixo" : "alto"} e é fornecido por ${v.supplier || "Continente"}"`'
 -   check: code
     condition: 'c.includes("`")'
 -   check: code
     condition: 'o.if.length === 0 && (c.match(/\?.*?:/g) ?? []).length < 2'
 -   check: code
     condition: 'o.line <= 5'
-output: "O produto Colgate tem um preço baixo e é fornecido por Auchan"
+output: |-
+    "O produto Colgate tem um preço baixo e é fornecido por Auchan"
 varParse: true
 ---
 

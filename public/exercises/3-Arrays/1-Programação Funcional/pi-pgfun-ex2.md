@@ -2,14 +2,14 @@
 name: O método flatMap
 validators:
 -   check: output
-    condition: 's === "2,4,6,8,10,12,14,16,18"'
+    condition: 's === "[2, 4, 6, 8, 10, 12, 14, 16, 18]"'
 -   check: code
     condition: 'o.loop.length === 0'
 -   check: code
     condition: '!c.includes("flat(")'
 -   check: code
     condition: 'o.func.length >= 1'
-output: "2,4,6,8,10,12,14,16,18"
+output: "[2, 4, 6, 8, 10, 12, 14, 16, 18]"
 ---
 
 O método `flatMap` é um método que aplica uma transformação a cada elemento de um *array* e, em seguida, aplica o método `flat` com nível 1. É identico à utilização de `map` e `flat` logo de seguida mas mais eficiente.

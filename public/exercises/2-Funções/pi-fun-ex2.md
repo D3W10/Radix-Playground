@@ -2,12 +2,14 @@
 name: Valores padrão
 validators:
 -   check: output
-    condition: 's === "5.5€\n8.61€"'
+    condition: 's === `"5.5€"\n"8.61€"`'
 -   check: code
     condition: 'o.func.length >= 1'
 -   check: code
     condition: 'o.var.length === 0'
-output: "5.5€\n8.61€"
+output: |-
+    "5.5€"
+    "8.61€"
 ---
 
 Devido à liberdade das funções na passagem de parâmetros, especialmente pelos mesmos não serem obrigatórios, é possível definir valores *default* quando os mesmos não são expecificados:

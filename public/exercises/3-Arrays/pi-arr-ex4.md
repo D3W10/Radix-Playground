@@ -2,10 +2,10 @@
 name: Arrays e Strings
 validators:
 -   check: output
-    condition: 's === "44 10 2"'
+    condition: 's === "[44, 10, 2]"'
 -   check: code
     condition: 'o.func.length >= 2'
-output: "44 10 2"
+output: "[44, 10, 2]"
 ---
 
 Neste exercício, escreve um programa que conte os caracteres, as palavras e os parágrafos de uma *string*. Este programa será dividido em 2 funções:

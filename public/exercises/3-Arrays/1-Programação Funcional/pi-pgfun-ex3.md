@@ -2,12 +2,13 @@
 name: O método reduce
 validators:
 -   check: output
-    condition: 's === "ACEFBDGH"'
+    condition: 's === `"ACEFBDGH"`'
 -   check: code
     condition: 'o.loop.length === 0'
 -   check: code
     condition: 'o.func.length >= 1'
-output: "ACEFBDGH"
+output: |-
+    "ACEFBDGH"
 ---
 
 O método `reduce` reduz todos os elementos do *array* para um único valor. Esta função recebe uma função com 2 parâmetros, o primeiro sendo o acumulado das iterações anteriores e o segundo sendo o elemento atual do *array*. O `reduce` recebe ainda o valor inicial do acumulado. Vejamos um exemplo prático:

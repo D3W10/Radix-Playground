@@ -16,14 +16,27 @@ export class IsolatedContext {
         const context = await isolate.createContext();
         const jail = context.global;
 
-        const logCallback = new ivm.Reference((...args: any[]) => this.logs += args.toString() + "\n");
+        const logCallback = new ivm.Reference((...logs: string[]) => this.logs += logs.join(""));
         this.logs = "";
 
         await jail.set("_log", logCallback);
         await context.eval(`
+            const flatToString = arg => {
+                if (typeof arg !== "object") {
+                    const surround = typeof arg === "string" ? '"' : '';
+                    return surround + arg.toString() + surround;
+                }
+                else if (typeof arg === "undefined")
+                    return "undefined";
+                else if (Array.isArray(arg))
+                    return "[" + arg.map(a => flatToString(a)).join(", ") + "]";
+                else
+                    return JSON.stringify(arg, null, 4);
+            };
+
             const console = {
                 log: function(...args) {
-                    _log.apply(null, args.map(a => a.toString()));
+                    _log.apply(null, args.map(arg => flatToString(arg) + "\\n"));
                 }
             };
         `);

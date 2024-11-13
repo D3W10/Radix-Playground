@@ -2,12 +2,18 @@
 name: Introdução aos Arrays
 validators:
 -   check: output
-    condition: 's === v.data.join("\n") + "\n" + v.data.length'
+    condition: 's === `${v.data.map(d => `"${d}"`).join("\n")}\n${v.data.length}`'
 -   check: code
     condition: 'o.loop.length === 1'
 -   check: code
     condition: 'o.var.length === 2'
-output: "Valor 1\nValor 2\nValor 3\nValor 4\nValor 5\n5"
+output: |-
+    "Valor 1"
+    "Valor 2"
+    "Valor 3"
+    "Valor 4"
+    "Valor 5"
+    5
 varParse: true
 ---
 

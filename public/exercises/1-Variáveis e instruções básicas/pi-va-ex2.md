@@ -2,10 +2,12 @@
 name: Tipos de dados
 validators:
 -   check: output
-    condition: 's === "boolean\nobject"'
+    condition: 's === `"boolean"\n"object"`'
 -   check: code
     condition: 'o.var.filter(v => v === "let").length === 1'
-output: "boolean\nobject"
+output: |-
+    "boolean"
+    "object"
 ---
 
 Como referido no exercício anterior, JavaScript é uma linguagem *weakly typed* e *dynamicly typed*, isto é, as variáveis não têm um tipo de dados pré-definido e constante durante o decorrer do programa. Tomemos como exemplo o seguinte código:

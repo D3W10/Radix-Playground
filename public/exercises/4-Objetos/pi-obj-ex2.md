@@ -2,12 +2,17 @@
 name: Ciclo For In
 validators:
 -   check: output
-    condition: 's === "a: 2\nb: 4\nc: 6\nd: 8\ne: 10"'
+    condition: 's === `"a: 2"\n"b: 4"\n"c: 6"\n"d: 8"\n"e: 10"`'
 -   check: code
     condition: 'o.loop.every(l => l === "for in")'
 -   check: code
     condition: 'o.loop.length >= 1'
-output: "a: 2\nb: 4\nc: 6\nd: 8\ne: 10"
+output: |-
+    "a: 2"
+    "b: 4"
+    "c: 6"
+    "d: 8"
+    "e: 10"
 ---
 
 Até agora vimos vários tipos de ciclos, cada um deles com as suas características:

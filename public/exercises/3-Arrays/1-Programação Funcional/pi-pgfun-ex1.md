@@ -2,12 +2,13 @@
 name: Os métodos map e filter
 validators:
 -   check: output
-    condition: 's === "Destino,Decisão,Dança"'
+    condition: 's === `["Destino", "Decisão", "Dança"]`'
 -   check: code
     condition: 'o.loop.length === 0'
 -   check: code
     condition: 'o.func.length >= 1'
-output: "Destino,Decisão,Dança"
+output: |-
+    ["Destino", "Decisão", "Dança"]
 ---
 
 **JavaScript** oferece um conjunto de métodos para trabalhar com **arrays** que facilitam a manipulação dos seus dados, estes métodos seguem o paradigma da [programação funcional](https://en.wikipedia.org/wiki/Functional_programming).

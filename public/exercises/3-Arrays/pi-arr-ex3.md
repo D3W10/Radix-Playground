@@ -2,14 +2,15 @@
 name: Métodos em Arrays
 validators:
 -   check: output
-    condition: 's === "Dança Decisão Destino Diamante"'
+    condition: 's === `"Dança Decisão Destino Diamante"`'
 -   check: code
     condition: 'o.loop.every(l => l === "for of")'
 -   check: code
     condition: 'o.loop.length >= 1'
 -   check: code
     condition: 'o.func.length >= 1'
-output: "Dança Decisão Destino Diamante"
+output: |-
+    "Dança Decisão Destino Diamante"
 ---
 
 Tal como mencionado no primeiro exercício sobre *arrays*, existem vários métodos e propriedades disponíveis para a manipulação do seu conteúdo. Para além do `length`, os dois principais métodos são:

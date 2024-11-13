@@ -2,12 +2,22 @@
 name: Ternário e Concatenação
 validators:
 -   check: output
-    condition: 's === "1 é ímpar\n2 é par\n3 é ímpar\n4 é par\n5 é ímpar\n6 é par\n7 é ímpar\n8 é par\n9 é ímpar\n10 é par"'
+    condition: 's === `"1 é ímpar"\n"2 é par"\n"3 é ímpar"\n"4 é par"\n"5 é ímpar"\n"6 é par"\n"7 é ímpar"\n"8 é par"\n"9 é ímpar"\n"10 é par"`'
 -   check: code
     condition: 'o.if.length === 0'
 -   check: code
     condition: 'o.var.length <= 2'
-output: "1 é ímpar\n2 é par\n3 é ímpar\n4 é par\n5 é ímpar\n6 é par\n7 é ímpar\n8 é par\n9 é ímpar\n10 é par"
+output: |-
+    "1 é ímpar"
+    "2 é par"
+    "3 é ímpar"
+    "4 é par"
+    "5 é ímpar"
+    "6 é par"
+    "7 é ímpar"
+    "8 é par"
+    "9 é ímpar"
+    "10 é par"
 ---
 
 Á medida que o código vai ganhando mais complexidade, as vezes podemo-nos deparar com condições que definem o valor de uma variável, vejamos o seguinte exemplo:

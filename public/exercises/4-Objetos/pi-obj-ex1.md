@@ -2,12 +2,15 @@
 name: Introdução aos Objetos
 validators:
 -   check: output
-    condition: '/^Daniel\n(20)\n(?!\1)\d+$/g.test(s)'
+    condition: '/^"Daniel"\n(20)\n(?!\1)\d+$/g.test(s)'
 -   check: code
     condition: 'c.includes("student.age=")'
 -   check: code
     condition: 'o.var.length === 1'
-output: "Daniel\n20\n21"
+output: |-
+    "Daniel"
+    20
+    21
 ---
 
 A programação orientada a objetos (POO) é um paradigma de programação que se baseia no conceito de "objeto", sendo este algo que pode armazenar dados na forma de campos e código na forma de métodos. Muitas linguagens de programação suportam a POO na forma de classes e interfaces, em **JavaScript**, a criação de objetos não precisa de ser feita utilizando classes, pode ser sim feita declarando um objeto arbitrário de forma explícita.
@@ -47,16 +50,25 @@ console.log(obj.key4()); // Imprime na consola: Hello!
 console.log(obj.key5.key6); // "value6"
 ```
 
-Para além de obter o valor, também é possível modifica-los utilizando uma afetação:
+Para além de obter o valor, também é possível adicionar, modificar ou remover chaves de um objeto:
 
 ```js
+// Adicionar
+obj.newKey = "newValue";
+obj.key5.newKey2 = "newValue2";
+
+// Modificar
 obj.key2 = "21";
 obj.key5.key6 = "newValue";
-console.log(obj.key2); // "21"
-console.log(obj.key5.key6); // "newValue"
+
+// Remover
+delete obj.newKey;
+delete obj.key5.newKey2;
 ```
 
-Voltando um bocadinho atrás, as chaves de um objeto têm de ser do tipo *string* ou *number*, sendo as aspas da chave opcionais **se** a mesma apenas tiver caracteres alfanuméricos, eis um exemplo:
+> O operador `delete`, neste exemplo, é utilizado para remover uma chave de um objeto.
+
+Voltando atrás, as chaves de um objeto têm de ser do tipo *string* ou *number*, sendo as aspas da chave opcionais **se** a mesma apenas tiver caracteres alfanuméricos, eis um exemplo:
 
 ```js
 const obj = {

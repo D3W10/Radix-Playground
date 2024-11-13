@@ -12,7 +12,7 @@ validators:
 output: "15"
 ---
 
-Neste exercício, escreve um programa que define a função `calcAvg` que recebe um estudante por parâmetro e devolve a sua média. O objeto que representa um estudante é composto da seguinte forma:
+Neste exercício, escreve um programa que define a função `calcAvg` que recebe um objeto com informações relativas a um aluno por parâmetro e devolve a sua média. O objeto que representa um estudante é composto da seguinte forma:
 
 ```js
 const student = {

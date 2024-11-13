@@ -2,12 +2,14 @@
 name: Métodos sobre Strings
 validators:
 -   check: output
-    condition: 's === "A VIDA É BELA\n13"'
+    condition: 's === `"A VIDA É BELA"\n13`'
 -   check: code
     condition: 'c.includes("original.substring(8).replace(\"será\",\"é\").toUpperCase()") || c.includes("original.substring(8).toUpperCase().replace(\"SERÁ\",\"É\")")'
 -   check: code
     condition: 'o.var.length === 2'
-output: "A VIDA É BELA\n13"
+output: |-
+    "A VIDA É BELA"
+    13
 ---
 
 As *strings*, tem por padrão alguns métodos e propriedades que podem ser usados para a sua manipulação. Esses métodos podem ser acedidos utilizando a notação `.`, tal como é feito no `console.log`:
