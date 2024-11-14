@@ -2,7 +2,7 @@
 name: Passagem por referência/valor
 validators:
 -   check: output
-    condition: >-
+    condition: |-
         s === `{
             "name": "Daniel",
             "age": 20,
@@ -17,7 +17,7 @@ validators:
     condition: 'o.func.length >= 1'
 -   check: code
     condition: '!c.includes("return")'
-output: >-
+output: |-
     {
         "name": "Daniel",
         "age": 20,
@@ -30,7 +30,7 @@ output: >-
     }
 ---
 
-Em JavaScript, existem duas formas pelas quais um valor pode ser passado para uma função, são elas:
+Em **JavaScript**, existem duas formas pelas quais um valor pode ser passado para uma função, são elas:
 - **Passagem por valor**: Todos os tipos primitivos (*number*, *string*, *boolean*, etc.) são passados por valor, ou seja, quando a função é chamada, é criada uma cópia do valor para o parâmetro da função. Quaisquer alterações feitas ao valor dentro da função **não afetarão** o valor original.
 
 ```js

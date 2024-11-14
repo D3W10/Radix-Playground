@@ -36,6 +36,8 @@ Para os exercícios seguintes, serão apenas utilizados os primeiros 6 tipos de 
 
 O tipo de dados `null` que está presente em outras linguagens, em JavaScript representa a "ausência de um objeto", enquanto que o `undefined` representa a "ausência de um valor". Este tipos serão utilizados e explicados com mais detalhes quando os objetos forem introduzidos.
 
+Para além do `null` e do `undefined`, existe também o valor `NaN` (*Not a number*) que, como o nome indica, um valor não número foi tentado ser convertido para um número.
+
 ***
 
 Para obter o valor atual de uma variável, utiliza-se o operador `typeof` que devolve uma *string* com o tipo de dados dessa variável:

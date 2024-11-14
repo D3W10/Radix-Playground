@@ -31,9 +31,17 @@ Os operadores aritméticos são utilizados para realizar operações matemática
 7. `--` Decremento;
 8. `**` Exponenciação;
 9. `-` Negação unária (Quando usado antes de um número ou variável, devolve o seu simétrico);
-10. `+` Mais unário (Quando usado antes de um valor ou variável, *tenta converter-lo* para um número).
+10. `+` Mais unário (Quando usado antes de um valor ou variável, *tenta converter-lo* para um número, caso contrário `NaN`).
 
 > O *mais unário* vai ser bastante útil para converter valores do tipo *string* para números, por exemplo `+"8"` devolveria o valor `8`.
+
+Antes de ver os restantes operadores, é importante notar que **JavaScript**, ao contrário de outras linguagens, converte valores entre tipos de acordo com a necessidade, por exemplo:
+
+```js
+console.log(1 + "2"); // 12
+// O 1 foi convertido para uma string nesta expressão
+// O "+" nesta "soma" não é um operador de adição, este operador será abordado no próximo exercício
+```
 
 Os operadores de comparação são usados para comparar 2 valores e devolvem um valor booleano correspondente a essa comparação. Como visto anteriormente são eles o `==`, `===`, `!=`, `!==`, `>`, `<`, `>=` e `<=`.
 
