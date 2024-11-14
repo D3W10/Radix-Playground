@@ -236,9 +236,26 @@ export default function Home() {
     }
 
     useEffect(() => {
+        const handleShortcut = (event: KeyboardEvent) => {
+            if ((event.metaKey || event.ctrlKey) && event.key === "s") {
+                event.preventDefault();
+                saveExercise();
+            }
+            else if (event.key === "F5") {
+                event.preventDefault();
+                executeCode();
+            }
+        };
+
+        window.addEventListener("keydown", handleShortcut);
+
         if (exercise && saveEnabled)
-            window.addEventListener("beforeunload", handleUnload)
-        return () => window.removeEventListener("beforeunload", handleUnload)
+            window.addEventListener("beforeunload", handleUnload);
+
+        return () => {
+            window.removeEventListener("beforeunload", handleUnload);
+            window.removeEventListener("keydown", handleShortcut);
+        };
     }, [exercise, saveEnabled]);
 
     useEffect(() => {
@@ -335,7 +352,7 @@ export default function Home() {
                     <PanelGroup autoSaveId="explorerLayout" direction="vertical">
                         <Panel className="min-w-48 min-h-12" defaultSize={85}>
                             {!showExercise ? (
-                                <PanelLayout title="Explorer">
+                                <PanelLayout title="Explorer" className="h-[calc(100%_-_3rem)]">
                                     {treeView == undefined ? (
                                         <LoadSpinner />
                                     ) : (
