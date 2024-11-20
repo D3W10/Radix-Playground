@@ -4,6 +4,7 @@ import { Suspense, useEffect, useRef, useState } from "react";
 import { getPanelElement, ImperativePanelHandle, Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import Editor, { DiffEditor, useMonaco } from "@monaco-editor/react";
 import { minify_sync } from "terser";
+import hljs from "highlight.js";
 import PanelLayout from "@/app/_src/components/PanelLayout";
 import Icon from "./_src/components/Icon";
 import TreeView from "@/app/_src/components/TreeView";
@@ -11,11 +12,12 @@ import Button from "@/app/_src/components/Button";
 import LoadSpinner from "./_src/components/LoadSpinner";
 import Dialog, { DialogMethods } from "./_src/components/Dialog";
 import { defineGalaxy } from "./_src/models/defineGalaxy.function";
-import { cleanInvalidStorageEntries, ExStore } from "./_src/utils";
+import { cleanInvalidStorageEntries, ExStore, indentObject } from "./_src/utils";
 import type { ServerResult } from "./_src/models/ServerResult.interface";
 import type { EngineRoute } from "./engine/route";
 import type { FileNode } from "./_src/models/FileNode.interface";
 import type { Exercise } from "./_src/models/Exercise.interface";
+import type { LogEntry } from "./_src/models/IsolatedContext.class";
 
 const defaultCode = `// ${(new Date()).toUTCString()}\n\nconsole.log("Hello world");`;
 
@@ -27,7 +29,7 @@ export default function Home() {
     const [saveEnabled, setSaveEnabled] = useState(false);
     const [consoleColapsed, setConsoleColapsed] = useState(false);
     const [isRunning, setIsRunning] = useState(false);
-    const [logs, setLogs] = useState<[boolean, string]>([false, ""]);
+    const [logs, setLogs] = useState<[boolean, LogEntry[][]]>([false, []]);
     const [runResult, setRunResult] = useState<0 | 1 | 2 | 3>();
     const [showDiff, setShowDiff] = useState(false);
 
@@ -56,6 +58,7 @@ export default function Home() {
             })).json() as ServerResult<EngineRoute>;
 
             if (execResult.status === 0 && execResult.data !== undefined) {
+                execResult.data = execResult.data.map(l => l.map(p => [indentObject(p[0]), p[1]]));
                 setLogs([false, execResult.data]);
 
                 if (exercise)
@@ -78,8 +81,9 @@ export default function Home() {
     function validateResult(data: EngineRoute) {
         let level: 0 | 1 | 2 | 3 = 0, i = 1, vars: Record<string, string | number | boolean> = {};
         const code = getCodeMinified()!;
+        const output = (() => data.map(l => l.map(([p, t]) => t === "string" ? `"${p}"` : p)).join("\n"))();
 
-        console.debug(code);
+        console.debug({ output, code });
 
         if (exercise && exercise.varParse) {
             const rawVars = [...code.matchAll(/\b(?:let|const|var)\s+(\w+)\s*=\s*(\d+|".*?"|true|false|\[.*?\]|\{.*?\})/g)];
@@ -123,7 +127,7 @@ export default function Home() {
         try {
             for (const validator of exercise!.validators) {
                 const valFybc = new Function("s", "c", "v", "o", `return ${validator.condition}`);
-                const validation = valFybc(data, code, vars, options);
+                const validation = valFybc(output, code, vars, options);
     
                 if (!validation) {
                     console.warn("Validation failed on condition " + i);
@@ -304,7 +308,7 @@ export default function Home() {
                                 <PanelLayout title="Diff" signatureIcon="return" onClick={() => setShowDiff(false)}>
                                     <DiffEditor
                                         original={exercise?.output}
-                                        modified={logs[1]}
+                                        modified={logs[1].map(l => l.map(p => p[0]).join(" ")).join("\n")}
                                         theme="galaxy"
                                         options={{ "bracketPairColorization.enabled": false, minimap: { enabled: false }, readOnly: true } as any}
                                         loading={<LoadSpinner />}
@@ -321,7 +325,15 @@ export default function Home() {
                                     ) : ( 
                                         <div className={`w-full h-fit min-h-full px-4 ${logs[0] ? "text-red-400" : ""}`}>
                                             {logs[1].length !== 0 ? (
-                                                <pre className="text-sm font-mono">{logs[1]}</pre>
+                                                <pre className="flex flex-col text-sm font-mono">
+                                                    {logs[1].map((log, i) => (
+                                                        <pre key={i} className="*:after:content-['_'] last:*:after:content-['']">
+                                                            {log.map(([value, type], i) => (
+                                                                <code key={i} className={`log-${type}`} dangerouslySetInnerHTML={{ __html: type !== "object" ? value : hljs.highlight(value, { language: "javascript" }).value.replace(/\n/g, "<br />") }} />
+                                                            ))}
+                                                        </pre>
+                                                    ))}
+                                                </pre>
                                             ) : (
                                                 <p className="text-sm text-slate-500 font-mono">Output log is empty</p>
                                             )}

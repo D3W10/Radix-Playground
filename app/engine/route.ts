@@ -1,11 +1,11 @@
 import { ServerResult } from "../_src/models/ServerResult.interface";
-import { IsolatedContext } from "../_src/models/IsolatedContext.class";
+import { IsolatedContext, LogEntry } from "../_src/models/IsolatedContext.class";
 
 interface Body {
     code?: string;
 }
 
-export type EngineRoute = string;
+export type EngineRoute = LogEntry[][];
 
 export async function POST(req: Request) {
     try {

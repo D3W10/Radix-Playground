@@ -1,14 +1,16 @@
 import ivm from "isolated-vm";
 
+export type LogEntry = [string, "string" | "number" | "boolean" | "undefined" | "object"];
+
 export class IsolatedContext {
     private memoryLimit: number;
     private timeout: number;
-    private logs: string;
+    private logs: LogEntry[][];
 
     constructor(memoryLimit = 128, timeout = 5000) {
         this.memoryLimit = memoryLimit;
         this.timeout = timeout;
-        this.logs = "";
+        this.logs = [];
     }
 
     async runCode(code: string) {
@@ -16,27 +18,25 @@ export class IsolatedContext {
         const context = await isolate.createContext();
         const jail = context.global;
 
-        const logCallback = new ivm.Reference((...logs: string[]) => this.logs += logs.join(""));
-        this.logs = "";
+        const logCallback = new ivm.Reference((serializedLogs: string) => this.logs.push(JSON.parse(serializedLogs).logs as LogEntry[]));
+        this.logs = [];
 
         await jail.set("_log", logCallback);
         await context.eval(`
-            const flatToString = arg => {
-                if (typeof arg !== "object") {
-                    const surround = typeof arg === "string" ? '"' : '';
-                    return surround + arg.toString() + surround;
-                }
+            const flatToTuple = (arg, rec = false) => {
+                if (typeof arg === "string" || typeof arg === "number" || typeof arg === "boolean")
+                    return !rec ? [arg.toString(), typeof arg] : typeof arg === "string" ? '"' + arg + '"' : arg.toString();
                 else if (typeof arg === "undefined")
-                    return "undefined";
+                    return !rec ? ["undefined", "undefined"] : "undefined";
                 else if (Array.isArray(arg))
-                    return "[" + arg.map(a => flatToString(a)).join(", ") + "]";
+                    return !rec ? ["[" + arg.map(a => flatToTuple(a, true)).join(", ") + "]", "object"] : "[" + arg.map(a => flatToTuple(a, true)).join(", ") + "]";
                 else
-                    return JSON.stringify(arg, null, 4);
+                    return !rec ? [JSON.stringify(arg), "object"] : JSON.stringify(arg);
             };
 
             const console = {
                 log: function(...args) {
-                    _log.apply(null, args.map(arg => flatToString(arg) + "\\n"));
+                    _log.apply(null, [JSON.stringify({ logs: args.map(arg => flatToTuple(arg)) })]);
                 }
             };
         `);
@@ -46,7 +46,7 @@ export class IsolatedContext {
 
             return {
                 success: true,
-                result: this.logs.trim()
+                result: this.logs
             };
         }
         catch (error) {

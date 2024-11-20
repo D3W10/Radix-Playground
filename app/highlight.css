@@ -2,15 +2,15 @@
     color: #5C7884;
 }
 
-.hljs-keyword {
+.hljs-keyword, .log-boolean, .log-undefined {
     color: #CC80FF;
 }
 
-.hljs-number, .hljs-literal {
+.hljs-number, .hljs-literal, .log-number {
     color: #FF8A66;
 }
 
-.hljs-string {
+.hljs-string, .log-string {
     color: #C8FF75;
 }
 
@@ -26,6 +26,6 @@
     color: #FFBF47;
 }
 
-.hljs-function, .hljs-attr, .hljs-subst, .hljs-built_in {
+.hljs-function, .hljs-attr, .hljs-subst, .hljs-built_in, .log-object {
     color: #8ADEFF;
 }
