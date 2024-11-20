@@ -3,42 +3,38 @@ name: Number, Array e Object
 validators:
 -   check: output
     condition: |-
-        s === `[{
-            "name": "Huracan",
-            "brand": "Lamborghini",
-            "price": [
-                52642
-            ],
-            "wheels": 4,
-            "windows": 4
-        }, {
-            "name": "XC90",
-            "brand": "Volvo",
-            "price": [
-                29000
-            ],
-            "color": "red",
-            "wheels": 4,
-            "windows": 4
-        }, {
-            "name": "C-Class",
-            "brand": "Mercedes",
-            "price": [
-                35000,
-                37000
-            ],
-            "wheels": 4,
-            "windows": 4
-        }, {
-            "name": "S90",
-            "brand": "Volvo",
-            "price": [
-                37000
-            ],
-            "autopilot": true,
-            "wheels": 4,
-            "windows": 4
-        }]
+        s === `[
+            {
+                name: "Huracan",
+                brand: "Lamborghini",
+                price: [52642],
+                wheels: 4,
+                windows: 4
+            },
+            {
+                name: "XC90",
+                brand: "Volvo",
+                price: [29000],
+                color: "red",
+                wheels: 4,
+                windows: 4
+            },
+            {
+                name: "C-Class",
+                brand: "Mercedes",
+                price: [35000, 37000],
+                wheels: 4,
+                windows: 4
+            },
+            {
+                name: "S90",
+                brand: "Volvo",
+                price: [37000],
+                autopilot: true,
+                wheels: 4,
+                windows: 4
+            }
+        ]
         ["name", "brand", "price", "wheels", "windows"]`
 -   check: code
     condition: 'o.func.length >= 1'
@@ -47,42 +43,38 @@ validators:
 -   check: code
     condition: 'c.includes("isNaN(") && c.includes("Object.keys(") && c.includes("Object.assign(")'
 output: |-
-    [{
-        "name": "Huracan",
-        "brand": "Lamborghini",
-        "price": [
-            52642
-        ],
-        "wheels": 4,
-        "windows": 4
-    }, {
-        "name": "XC90",
-        "brand": "Volvo",
-        "price": [
-            29000
-        ],
-        "color": "red",
-        "wheels": 4,
-        "windows": 4
-    }, {
-        "name": "C-Class",
-        "brand": "Mercedes",
-        "price": [
-            35000,
-            37000
-        ],
-        "wheels": 4,
-        "windows": 4
-    }, {
-        "name": "S90",
-        "brand": "Volvo",
-        "price": [
-            37000
-        ],
-        "autopilot": true,
-        "wheels": 4,
-        "windows": 4
-    }]
+    [
+        {
+            name: "Huracan",
+            brand: "Lamborghini",
+            price: [52642],
+            wheels: 4,
+            windows: 4
+        },
+        {
+            name: "XC90",
+            brand: "Volvo",
+            price: [29000],
+            color: "red",
+            wheels: 4,
+            windows: 4
+        },
+        {
+            name: "C-Class",
+            brand: "Mercedes",
+            price: [35000, 37000],
+            wheels: 4,
+            windows: 4
+        },
+        {
+            name: "S90",
+            brand: "Volvo",
+            price: [37000],
+            autopilot: true,
+            wheels: 4,
+            windows: 4
+        }
+    ]
     ["name", "brand", "price", "wheels", "windows"]
 ---
 

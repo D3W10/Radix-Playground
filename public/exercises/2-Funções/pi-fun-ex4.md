@@ -1,5 +1,5 @@
 ---
-name: Funções nested
+name: Funções dentro de funções
 validators:
 -   check: output
     condition: 's === (Math.pow(+(c.match(/hipotQuad\((\d+),\s*(\d+)\)/) ?? [])[1], 2) + Math.pow(+(c.match(/hipotQuad\((\d+),\s*(\d+)\)/) ?? [])[2], 2)).toString()'

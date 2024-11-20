@@ -4,14 +4,10 @@ validators:
 -   check: output
     condition: |-
         s === `{
-            "name": "Daniel",
-            "age": 20,
-            "grades": [
-                15,
-                12,
-                18
-            ],
-            "mark": 15
+            name: "Daniel",
+            age: 20,
+            grades: [15, 12, 18],
+            mark: 15
         }`
 -   check: code
     condition: 'o.func.length >= 1'
@@ -19,14 +15,10 @@ validators:
     condition: '!c.includes("return")'
 output: |-
     {
-        "name": "Daniel",
-        "age": 20,
-        "grades": [
-            15,
-            12,
-            18
-        ],
-        "mark": 15
+        name: "Daniel",
+        age: 20,
+        grades: [15, 12, 18],
+        mark: 15
     }
 ---
 

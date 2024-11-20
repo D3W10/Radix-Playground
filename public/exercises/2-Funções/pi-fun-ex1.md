@@ -1,5 +1,5 @@
 ---
-name: Funções
+name: Introdução às funções
 validators:
 -   check: output
     condition: 's === Math.pow(+(c.match(/(?<=power\()\d+(?=\))/) ?? [])[0], 2).toString()'

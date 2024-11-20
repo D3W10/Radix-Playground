@@ -4,9 +4,9 @@ validators:
 -   check: output
     condition: |-
         s === `"{
-            "name": "Huracan",
-            "brand": "Lamborghini",
-            "available": true
+            name: "Huracan",
+            brand: "Lamborghini",
+            available: true
         }"`
 -   check: code
     condition: 'o.func.length >= 1'
@@ -14,9 +14,9 @@ validators:
     condition: 'c.includes("JSON.parse(") && c.includes("JSON.stringify(")'
 output: |-
     "{
-        "name": "Huracan",
-        "brand": "Lamborghini",
-        "available": true
+        name: "Huracan",
+        brand: "Lamborghini",
+        available: true
     }"
 ---
 
