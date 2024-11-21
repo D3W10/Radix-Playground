@@ -323,18 +323,22 @@ export default function Home() {
                                     logs[1].length === 0 && runResult === undefined ? (
                                         <p className="text-sm text-slate-500">Nothing to see here</p>
                                     ) : ( 
-                                        <div className={`w-full h-fit min-h-full px-4 ${logs[0] ? "text-red-400" : ""}`}>
-                                            {logs[1].length !== 0 ? (
-                                                <pre className="flex flex-col text-sm font-mono">
-                                                    {logs[1].map((log, i) => (
-                                                        <pre key={i} className="*:after:content-['_'] last:*:after:content-['']">
-                                                            {log.map(([value, type], i) => (
-                                                                <code key={i} className={`log-${type}`} dangerouslySetInnerHTML={{ __html: type !== "object" ? value : hljs.highlight(value, { language: "javascript" }).value.replace(/\n/g, "<br />") }} />
-                                                            ))}
-                                                        </pre>
-                                                    ))}
-                                                </pre>
-                                            ) : (
+                                        <div className={`w-full h-fit min-h-full px-4`}>
+                                            {logs[1].length !== 0 ?
+                                                !logs[0] ? (
+                                                    <pre className="flex flex-col text-sm font-mono">
+                                                        {logs[1].map((log, i) => (
+                                                            <pre key={i} className="*:after:content-['_'] last:*:after:content-['']">
+                                                                {log.map(([value, type], i) => (
+                                                                    <code key={i} className={`log-${type}`} dangerouslySetInnerHTML={{ __html: type !== "object" ? value : hljs.highlight(value, { language: "javascript" }).value.replace(/\n/g, "<br />") }} />
+                                                                ))}
+                                                            </pre>
+                                                        ))}
+                                                    </pre>
+                                                ) : (
+                                                    <pre className="text-red-400 text-sm font-mono">{logs[1]}</pre>
+                                                )
+                                            : (
                                                 <p className="text-sm text-slate-500 font-mono">Output log is empty</p>
                                             )}
                                             {runResult != undefined && (
