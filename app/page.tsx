@@ -10,10 +10,12 @@ import Icon from "./_src/components/Icon";
 import TreeView from "@/app/_src/components/TreeView";
 import Button from "@/app/_src/components/Button";
 import LoadSpinner from "./_src/components/LoadSpinner";
+import IconButton from "./_src/components/IconButton";
 import Dialog, { DialogMethods } from "./_src/components/Dialog";
 import { defineGalaxy } from "./_src/models/defineGalaxy.function";
 import { cleanInvalidStorageEntries, ExStore, indentObject } from "./_src/utils";
 import type { ServerResult } from "./_src/models/ServerResult.interface";
+import type { ExerciseRoute } from "./exercise/route";
 import type { EngineRoute } from "./engine/route";
 import type { FileNode } from "./_src/models/FileNode.interface";
 import type { Exercise } from "./_src/models/Exercise.interface";
@@ -23,7 +25,7 @@ const defaultCode = `// ${(new Date()).toUTCString()}\n\nconsole.log("Hello worl
 
 export default function Home() {
     const [lStorage, setLStorage] = useState<Record<string, ExStore>>({});
-    const [treeView, setTreeView] = useState<[FileNode[], string[]]>();
+    const [treeView, setTreeView] = useState<[FileNode[], string[], number]>();
     const [showExercise, setShowExercise] = useState(false);
     const [exercise, setExercise] = useState<Exercise>();
     const [saveEnabled, setSaveEnabled] = useState(false);
@@ -58,8 +60,8 @@ export default function Home() {
             })).json() as ServerResult<EngineRoute>;
 
             if (execResult.status === 0 && execResult.data !== undefined) {
-                execResult.data = execResult.data.map(l => l.map(p => [indentObject(p[0]), p[1]]));
-                setLogs([false, execResult.data]);
+                const logObj = execResult.data.map(l => l.map(p => [indentObject(p[0]), p[1]])) as LogEntry[][];
+                setLogs([false, logObj]);
 
                 if (exercise)
                     saveExercise(validateResult(execResult.data) == 0);
@@ -224,12 +226,12 @@ export default function Home() {
         consolePanelHtml.current = getPanelElement("consolePanel");
 
         (async () => {
-            const exTree = await (await fetch("/exercise")).json() as ServerResult<FileNode[]>;
+            const exTree = await (await fetch("/exercise")).json() as ServerResult<ExerciseRoute>;
 
             if (exTree.status === 0 && exTree.data !== undefined) {
-                setTreeView([exTree.data, []]);
+                setTreeView([exTree.data.files, [], exTree.data.count]);
 
-                const cleanStorage = cleanInvalidStorageEntries(localStorage, exTree.data);
+                const cleanStorage = cleanInvalidStorageEntries(localStorage, exTree.data.files);
                 setLStorage(cleanStorage);
             }
         })();
@@ -264,7 +266,7 @@ export default function Home() {
 
     useEffect(() => {
         if (treeView !== undefined)
-            setTreeView([treeView[0], Object.keys(lStorage).filter(k => lStorage[k].completed).map(k => k.replace("ex-", ""))]);
+            setTreeView([treeView[0], Object.keys(lStorage).filter(k => lStorage[k].completed).map(k => k.replace("ex-", "")), treeView[2]]);
     }, [lStorage]);
 
     useEffect(() => {
@@ -293,7 +295,10 @@ export default function Home() {
                     <PanelGroup autoSaveId="editorLayout" direction="vertical">
                         <Panel className="min-w-48 min-h-12" defaultSize={75}>
                             <div className={`w-full h-full ${!showDiff ? "block" : "hidden"}`}>
-                                <PanelLayout title="Editor" signatureIcon={exercise != undefined && saveEnabled ? "save" : undefined} onClick={() => saveExercise()}>
+                                <PanelLayout
+                                    title="Editor"
+                                    header={exercise != undefined && saveEnabled && <IconButton name="save" onClick={() => saveExercise()} />}
+                                >
                                     <Editor
                                         defaultValue={defaultCode}
                                         defaultLanguage="javascript"
@@ -305,10 +310,10 @@ export default function Home() {
                                 </PanelLayout>
                             </div>
                             <div className={`w-full h-full ${showDiff ? "block" : "hidden"}`}>
-                                <PanelLayout title="Diff" signatureIcon="return" onClick={() => setShowDiff(false)}>
+                                <PanelLayout title="Diff" header={<IconButton name="return" onClick={() => setShowDiff(false)} />}>
                                     <DiffEditor
                                         original={exercise?.output}
-                                        modified={logs[1].map(l => l.map(p => p[0]).join(" ")).join("\n")}
+                                        modified={!logs[0] ? logs[1].map(l => l.map(p => p[0]).join(" ")).join("\n") : ""}
                                         theme="galaxy"
                                         options={{ "bracketPairColorization.enabled": false, minimap: { enabled: false }, readOnly: true } as any}
                                         loading={<LoadSpinner />}
@@ -318,7 +323,12 @@ export default function Home() {
                         </Panel>
                         <PanelResizeHandle className="h-px bg-slate-700" onDragging={state => consoleIsResizing.current = state} />
                         <Panel id="consolePanel" className="min-w-48 min-h-12" defaultSize={25} ref={consolePanel} onResize={onConsoleResize}>
-                            <PanelLayout title="Console" className={`w-auto mr-2 pr-2 flex ${isRunning || logs[1].length == 0 ? "justify-center items-center" : ""} overflow-y-auto`} signatureIcon={!consoleColapsed ? "chevron-down" : "chevron-up"} ref={consolePanelLayoutHtml} onClick={() => setConsoleColapsed(!consoleColapsed)}>
+                            <PanelLayout
+                                title="Console"
+                                className={`w-auto mr-2 pr-2 flex ${isRunning || logs[1].length == 0 ? "justify-center items-center" : ""} overflow-y-auto`}
+                                ref={consolePanelLayoutHtml}
+                                header={<IconButton name={!consoleColapsed ? "chevron-down" : "chevron-up"} onClick={() => setConsoleColapsed(!consoleColapsed)} />}
+                            >
                                 {!isRunning ?
                                     logs[1].length === 0 && runResult === undefined ? (
                                         <p className="text-sm text-slate-500">Nothing to see here</p>
@@ -336,7 +346,7 @@ export default function Home() {
                                                         ))}
                                                     </pre>
                                                 ) : (
-                                                    <pre className="text-red-400 text-sm font-mono">{logs[1]}</pre>
+                                                    <pre className="text-sm text-red-400 font-mono">{logs[1]}</pre>
                                                 )
                                             : (
                                                 <p className="text-sm text-slate-500 font-mono">Output log is empty</p>
@@ -368,7 +378,11 @@ export default function Home() {
                     <PanelGroup autoSaveId="explorerLayout" direction="vertical">
                         <Panel className="min-w-48 min-h-12" defaultSize={85}>
                             {!showExercise ? (
-                                <PanelLayout title="Explorer" className="h-[calc(100%_-_3rem)]">
+                                <PanelLayout
+                                    title="Explorer"
+                                    className="h-[calc(100%_-_3rem)]"
+                                    header={<span className="mr-2 text-sm text-slate-600 font-semibold">{treeView ? treeView[2] : ""}</span>}
+                                >
                                     {treeView == undefined ? (
                                         <LoadSpinner />
                                     ) : (
@@ -382,7 +396,11 @@ export default function Home() {
                                     )}
                                 </PanelLayout>
                             ) : (
-                                <PanelLayout title="Exercise" signatureIcon="home" className={`w-auto ${exercise == undefined ? "h-full" : "h-auto"} mr-2 pr-2 overflow-y-auto`} onClick={saveCloseExercise}>
+                                <PanelLayout
+                                    title="Exercise"
+                                    className={`w-auto ${exercise == undefined ? "h-full" : "h-auto"} mr-2 pr-2 overflow-y-auto`}
+                                    header={<IconButton name="home" onClick={saveCloseExercise} />}
+                                >
                                     {exercise == undefined ? (
                                         <LoadSpinner />
                                     ) : (
