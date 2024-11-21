@@ -30,6 +30,7 @@ export default function Home() {
     const [exercise, setExercise] = useState<Exercise>();
     const [saveEnabled, setSaveEnabled] = useState(false);
     const [consoleColapsed, setConsoleColapsed] = useState(false);
+    const [useTypeScript, setUseTypeScript] = useState(false);
     const [isRunning, setIsRunning] = useState(false);
     const [logs, setLogs] = useState<[boolean, LogEntry[][]]>([false, []]);
     const [runResult, setRunResult] = useState<0 | 1 | 2 | 3>();
@@ -56,7 +57,7 @@ export default function Home() {
         try {
             const execResult = await (await fetch("/engine", {
                 method: "POST",
-                body: JSON.stringify({ code: monaco!.editor.getModels()[0].getValue() })
+                body: JSON.stringify({ code: monaco!.editor.getModels()[0].getValue(), typescript: useTypeScript })
             })).json() as ServerResult<EngineRoute>;
 
             if (execResult.status === 0 && execResult.data !== undefined) {
@@ -235,6 +236,8 @@ export default function Home() {
                 setLStorage(cleanStorage);
             }
         })();
+
+        setUseTypeScript(localStorage.getItem("useTypeScript") == "true");
     }, []);
 
     const handleUnload = (e: BeforeUnloadEvent) => {
@@ -280,6 +283,13 @@ export default function Home() {
         else if (!consoleIsResizing.current)
             consolePanel.current?.resize(25);
     }, [consoleColapsed]);
+
+    useEffect(() => {
+        localStorage.setItem("useTypeScript", useTypeScript.toString());
+
+        if (monaco)
+            monaco.editor.setModelLanguage(monaco.editor.getModels()[0], !useTypeScript ? "javascript" : "typescript");
+    }, [useTypeScript])
 
     useEffect(() => {
         if (monaco) {
@@ -414,7 +424,19 @@ export default function Home() {
                         </Panel>
                         <PanelResizeHandle className="h-px bg-slate-700" />
                         <Panel className="min-w-48 min-h-12" defaultSize={15}>
-                            <PanelLayout title="Run & Deploy" className="flex flex-col justify-center items-center">
+                            <PanelLayout
+                                title="Run & Compile"
+                                className="flex flex-col justify-center items-center"
+                                header={
+                                    <button className="w-8 p-1 flex justify-center items-center hover:bg-slate-900 rounded disabled:opacity-50 aspect-square" onClick={() => setUseTypeScript(!useTypeScript)}>
+                                        {!useTypeScript ? (
+                                            <p className="text-sm text-yellow-500 font-semibold">JS</p>
+                                        ) : (
+                                            <p className="text-sm text-blue-500 font-semibold">TS</p>
+                                        )}
+                                    </button>
+                                }
+                            >
                                 <Button className="w-full py-3 text-lg space-x-2" disabled={isRunning} onClick={executeCode}>
                                     {!isRunning ? (
                                         <>
