@@ -6,36 +6,59 @@ export interface ExStore {
 }
 
 export function cleanInvalidStorageEntries(storage: Storage, tree: FileNode[]) {
-    const allFiles = getAllFiles(tree);
+    const exEntries: Record<string, ExStore> = {};
+    const drEntries: Record<string, boolean> = {};
 
-    return Object.keys(storage).filter(k => k.startsWith("ex-")).reduce((p, k) => {
-        if (allFiles.findIndex(f => f.id == k.substring(3)) != -1) {
-            p[k] = JSON.parse(storage[k as keyof Storage]);
-            return p;
+    const allFiles = getAllFiles(tree);
+    const allFolders = getAllFolders(tree);
+
+    Object.keys(storage).forEach(k => {
+        if (k.startsWith("ex-")) {
+            if (allFiles.findIndex(f => f.id === k.substring(3)) != -1)
+                exEntries[k] = JSON.parse(storage[k as keyof Storage]);
+            else
+                storage.removeItem(k);
         }
-        else {
-            storage.removeItem(k);
-            return p;
+        else if (k.startsWith("dr-")) {
+            if (allFolders.findIndex(f => f.id === k.substring(3)) != -1)
+                drEntries[k] = storage[k] === "true";
+            else
+                storage.removeItem(k);
         }
-    }, {} as Record<string, ExStore>);
+    });
+
+    return [exEntries, drEntries] as [typeof exEntries, typeof drEntries];
 }
 
 function getAllFiles(data: FileNode[]) {
-    let allFiles: FileNode[] = [];
+    const allFiles: FileNode[] = [];
 
     function traverse(item: FileNode) {
-        if (item.files.length > 0) {
-            item.files.forEach(file => {
-                if (file.files.length == 0)
-                    allFiles.push(file);
-                traverse(file);
-            });
+        if (item.type == "directory")
+            item.files.forEach(traverse);
+        else
+            allFiles.push(item);
+    }
+
+    data.forEach(traverse);
+
+    return allFiles;
+}
+
+function getAllFolders(data: FileNode[]) {
+    const allFolders: FileNode[] = [];
+
+    function traverse(item: FileNode) {
+        if (item.type == "directory") {
+            allFolders.push(item);
+
+            item.files.forEach(traverse);
         }
     }
 
-    data.forEach(item => traverse(item));
+    data.forEach(traverse);
 
-    return allFiles;
+    return allFolders;
 }
 
 export function indentObject(objStr: string, level = 0): string {

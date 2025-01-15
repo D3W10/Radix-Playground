@@ -24,8 +24,8 @@ import type { LogEntry } from "./_src/models/IsolatedContext.class";
 const defaultCode = `// ${(new Date()).toUTCString()}\n\nconsole.log("Hello world");`;
 
 export default function Home() {
-    const [lStorage, setLStorage] = useState<Record<string, ExStore>>({});
-    const [treeView, setTreeView] = useState<[FileNode[], string[], number]>();
+    const [lStorage, setLStorage] = useState<[Record<string, ExStore>, Record<string, boolean>]>([{}, {}]);
+    const [treeView, setTreeView] = useState<[FileNode[], string[], Record<string, boolean>, number]>();
     const [showExercise, setShowExercise] = useState(false);
     const [exercise, setExercise] = useState<Exercise>();
     const [saveEnabled, setSaveEnabled] = useState(false);
@@ -176,7 +176,7 @@ export default function Home() {
                 return;
         }
 
-        monaco!.editor.getModels()[0].setValue(lStorage[`ex-` + id] && lStorage[`ex-` + id].content || defaultCode);
+        monaco!.editor.getModels()[0].setValue(lStorage[0][`ex-${id}`] && lStorage[0][`ex-${id}`].content || defaultCode);
         setShowExercise(true);
         setSaveEnabled(false);
 
@@ -193,8 +193,9 @@ export default function Home() {
 
             setSaveEnabled(false);
 
-            setLStorage({ ...lStorage, [`ex-` + exercise.id]: newData });
-            localStorage.setItem(`ex-` + exercise.id, JSON.stringify(newData));
+            lStorage[0][`ex-${exercise.id}`] = newData;
+            setLStorage(lStorage);
+            localStorage.setItem(`ex-${exercise.id}`, JSON.stringify(newData));
         }
     }
 
@@ -208,7 +209,7 @@ export default function Home() {
 
     async function saveCloseExercise() {
         if (exercise) {
-            if (lStorage[`ex-` + exercise.id] && monaco!.editor.getModels()[0].getValue() !== lStorage[`ex-` + exercise.id].content) {
+            if (lStorage[0][`ex-${exercise.id}`] && monaco!.editor.getModels()[0].getValue() !== lStorage[0][`ex-${exercise.id}`].content) {
                 const dialogResult = await dialogRef.current?.openModal({
                     title: "Unsaved changes",
                     message: "There are unsaved changes on your current exercise that will be lost upon closing. Are you sure you want to continue?",
@@ -223,6 +224,12 @@ export default function Home() {
         }
     }
 
+    function onTreeViewNodeCollapse(id: string, colapsed: boolean) {
+        lStorage[1][`dr-${id}`] = colapsed;
+        setLStorage(lStorage);
+        localStorage.setItem(`dr-${id}`, colapsed.toString());
+    }
+
     useEffect(() => {
         consolePanelHtml.current = getPanelElement("consolePanel");
 
@@ -230,7 +237,7 @@ export default function Home() {
             const exTree = await (await fetch("/exercise")).json() as ServerResult<ExerciseRoute>;
 
             if (exTree.status === 0 && exTree.data !== undefined) {
-                setTreeView([exTree.data.files, [], exTree.data.count]);
+                setTreeView([exTree.data.files, [], {}, exTree.data.count]);
 
                 const cleanStorage = cleanInvalidStorageEntries(localStorage, exTree.data.files);
                 setLStorage(cleanStorage);
@@ -269,7 +276,12 @@ export default function Home() {
 
     useEffect(() => {
         if (treeView !== undefined)
-            setTreeView([treeView[0], Object.keys(lStorage).filter(k => lStorage[k].completed).map(k => k.replace("ex-", "")), treeView[2]]);
+            setTreeView([
+                treeView[0],
+                Object.keys(lStorage[0]).filter(k => lStorage[0][k].completed).map(k => k.replace("ex-", "")),
+                lStorage[1],
+                treeView[3]
+            ]);
     }, [lStorage]);
 
     useEffect(() => {
@@ -391,7 +403,7 @@ export default function Home() {
                                 <PanelLayout
                                     title="Explorer"
                                     className="h-[calc(100%_-_3rem)]"
-                                    header={<span className="mr-2 text-sm text-slate-600 font-semibold">{treeView ? treeView[2] : ""}</span>}
+                                    header={<span className="mr-2 text-sm text-slate-600 font-semibold">{treeView ? treeView[3] : ""}</span>}
                                 >
                                     {treeView == undefined ? (
                                         <LoadSpinner />
@@ -400,7 +412,7 @@ export default function Home() {
                                             {treeView[0].length == 0 ? (
                                                 <p className="text-sm text-slate-500">Nothing to see here</p>
                                             ) : (
-                                                <TreeView className="px-2" tree={treeView[0]} completed={treeView[1]} onClick={openExercise} />
+                                                <TreeView className="px-2" tree={treeView[0]} completed={treeView[1]} colapsedNodes={treeView[2]} onClick={openExercise} onNodeColapse={onTreeViewNodeCollapse} />
                                             )}
                                         </div>
                                     )}

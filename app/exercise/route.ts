@@ -28,7 +28,7 @@ async function getTree(path: string): Promise<ExerciseRoute> {
         if (info.isDirectory()) {
             const subTree = await getTree(`${path}/${f}`);
             return {
-                node: { id: "", name: f, type: "directory", files: subTree.files } as FileNode,
+                node: { id: encodeURI(f), name: f, type: "directory", files: subTree.files } as FileNode,
                 count: subTree.count
             };
         } else {

@@ -1,5 +1,5 @@
 import { Inter } from "next/font/google";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import "./highlight.css";
 
@@ -9,6 +9,10 @@ export const metadata: Metadata = {
     title: "Radix Playground",
     description: "Run Node.JS scripts in the browser"
 };
+
+export const viewport: Viewport = {
+    themeColor: "#10b981"
+}
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode; }>) {
     return (
