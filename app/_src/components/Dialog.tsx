@@ -23,7 +23,7 @@ const Dialog = forwardRef<DialogMethods, DialogProps>(({ className }, ref) => {
     const [isOpen, setOpen] = useState(false);
     const [data, setData] = useState<DialogData>();
     const modalRef = useRef<HTMLDialogElement | null>(null);
-    const closeRef = useRef<(value: boolean) => unknown>();
+    const closeRef = useRef<(value: boolean) => unknown>(() => {});
 
     useImperativeHandle(ref, () => ({
         openModal: (data?: DialogData) => {
