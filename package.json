@@ -20,27 +20,27 @@
     "dependencies": {
         "@monaco-editor/react": "^4.6.0",
         "gray-matter": "^4.0.3",
-        "highlight.js": "^11.10.0",
-        "isolated-vm": "^5.0.1",
-        "next": "^15.0.1",
-        "react": "^18.3.1",
-        "react-dom": "^18.3.1",
-        "react-resizable-panels": "^2.1.5",
+        "highlight.js": "^11.11.1",
+        "isolated-vm": "^5.0.3",
+        "next": "^15.1.4",
+        "react": "^19.0.0",
+        "react-dom": "^19.0.0",
+        "react-resizable-panels": "^2.1.7",
         "rehype-highlight": "^7.0.1",
         "rehype-stringify": "^10.0.1",
         "remark-parse": "^11.0.0",
         "remark-rehype": "^11.1.1",
-        "tailwind-merge": "^2.5.4",
-        "terser": "^5.36.0",
-        "typescript": "^5.6.3",
+        "tailwind-merge": "^2.6.0",
+        "terser": "^5.37.0",
+        "typescript": "^5.7.3",
         "unified": "^11.0.5"
     },
     "devDependencies": {
-        "@types/node": "^22.8.0",
-        "@types/react": "^18.3.12",
-        "@types/react-dom": "^18.3.1",
+        "@types/node": "^22.10.6",
+        "@types/react": "^19.0.7",
+        "@types/react-dom": "^19.0.3",
         "autoprefixer": "^10.4.20",
-        "postcss": "^8.4.47",
-        "tailwindcss": "^3.4.14"
+        "postcss": "^8.5.1",
+        "tailwindcss": "^3.4.17"
     }
 }
