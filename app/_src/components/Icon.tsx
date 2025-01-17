@@ -1,12 +1,13 @@
 import React from "react";
 import type { SVGProps } from "react";
 
-export type IconNames = "spinner" | "home" | "save" | "return" | "folder" | "folder-open" | "chevron-down" | "chevron-up" | "square" | "square-checked" | "rocket" | "correct" | "wrong" | "circle";
+export type IconNames = "spinner" | "home" | "lightbulb" | "save" | "return" | "folder" | "folder-open" | "chevron-down" | "chevron-up" | "square" | "square-checked" | "rocket" | "correct" | "wrong" | "circle";
 
 export default function Icon({ icon, ...props }: { icon: IconNames } & SVGProps<SVGSVGElement>) {
     const components: Record<IconNames, React.ReactNode> = {
         "spinner": <Spinner {...props} />,
         "home": <Home {...props} />,
+        "lightbulb": <Lightbulb {...props} />,
         "save": <Save {...props} />,
         "return": <Return {...props} />,
         "folder": <Folder {...props} />,
@@ -30,6 +31,10 @@ function Spinner(props: SVGProps<SVGSVGElement>) {
 
 function Home(props: SVGProps<SVGSVGElement>) {
 	return (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" {...props}><path fill="currentColor" d="M10.55 2.532a2.25 2.25 0 0 1 2.9 0l6.75 5.692c.507.428.8 1.057.8 1.72v9.31a1.75 1.75 0 0 1-1.75 1.75h-3.5a1.75 1.75 0 0 1-1.75-1.75v-5.007a.25.25 0 0 0-.25-.25h-3.5a.25.25 0 0 0-.25.25v5.007a1.75 1.75 0 0 1-1.75 1.75h-3.5A1.75 1.75 0 0 1 3 19.254v-9.31c0-.663.293-1.292.8-1.72zm1.933 1.147a.75.75 0 0 0-.966 0L4.767 9.37a.75.75 0 0 0-.267.573v9.31c0 .138.112.25.25.25h3.5a.25.25 0 0 0 .25-.25v-5.007c0-.967.784-1.75 1.75-1.75h3.5c.966 0 1.75.783 1.75 1.75v5.007c0 .138.112.25.25.25h3.5a.25.25 0 0 0 .25-.25v-9.31a.75.75 0 0 0-.267-.573z"></path></svg>);
+}
+
+function Lightbulb(props: SVGProps<SVGSVGElement>) {
+	return (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" {...props}><path fill="currentColor" d="M12 2.001a7.25 7.25 0 0 1 7.25 7.25c0 2.096-.9 4.02-2.663 5.742a.75.75 0 0 0-.175.265l-.032.103l-1.13 4.895a2.25 2.25 0 0 1-2.02 1.737l-.173.007h-2.114a2.25 2.25 0 0 1-2.147-1.577l-.045-.167l-1.13-4.895a.75.75 0 0 0-.206-.368c-1.68-1.64-2.577-3.463-2.659-5.444l-.006-.298l.004-.24A7.25 7.25 0 0 1 12 2.002M14.115 18.5H9.884l.329 1.42a.75.75 0 0 0 .627.573l.103.008h2.114a.75.75 0 0 0 .7-.483l.03-.099zM12 3.501a5.75 5.75 0 0 0-5.746 5.53l-.004.22l.007.277c.076 1.563.8 3.02 2.206 4.392c.264.258.46.576.571.926l.049.178l.455 1.975h4.923l.458-1.976a2.25 2.25 0 0 1 .493-.97l.127-.133c1.404-1.373 2.128-2.828 2.204-4.392l.007-.277l-.004-.22A5.75 5.75 0 0 0 12 3.5"></path></svg>);
 }
 
 function Save(props: SVGProps<SVGSVGElement>) {

@@ -12,7 +12,9 @@ const PanelLayout = forwardRef<HTMLDivElement, PropsWithChildren<PanelLayoutProp
         <div className="w-full h-full flex flex-col">
             <div className="min-h-12 p-2 flex justify-between items-center">
                 <h3 className="m-1 text-slate-500 text-xs font-medium tracking-wide uppercase">{title}</h3>
-                {header}
+                <div className="space-x-2">
+                    {header}
+                </div>
             </div>
             <div className={twMerge("w-full h-full p-4 pt-0", className)} ref={ref}>
                 {children}

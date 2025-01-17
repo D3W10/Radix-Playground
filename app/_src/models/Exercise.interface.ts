@@ -6,6 +6,7 @@ export interface Exercise {
         condition: string;
     }[];
     output: string;
-    varParse: boolean;
+    varParse?: boolean;
+    solution: string;
     content: string;
 }

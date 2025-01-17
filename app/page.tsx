@@ -34,7 +34,7 @@ export default function Home() {
     const [isRunning, setIsRunning] = useState(false);
     const [logs, setLogs] = useState<[boolean, LogEntry[][]]>([false, []]);
     const [runResult, setRunResult] = useState<0 | 1 | 2 | 3>();
-    const [showDiff, setShowDiff] = useState(false);
+    const [editorPage, setEditorPage] = useState<"editor" | "solution" | "diff">("editor");
 
     const consoleIsResizing = useRef(false);
     const consolePanel = useRef<ImperativePanelHandle>(null);
@@ -316,11 +316,13 @@ export default function Home() {
                 <Panel className="min-w-48 min-h-12" defaultSize={70}>
                     <PanelGroup autoSaveId="editorLayout" direction="vertical">
                         <Panel className="min-w-48 min-h-12" defaultSize={75}>
-                            <div className={`w-full h-full ${!showDiff ? "block" : "hidden"}`}>
-                                <PanelLayout
-                                    title="Editor"
-                                    header={exercise != undefined && saveEnabled && <IconButton name="save" onClick={() => saveExercise()} />}
-                                >
+                            <div className={`w-full h-full ${editorPage === "editor" ? "block" : "hidden"}`}>
+                                <PanelLayout title="Editor" header={exercise != undefined && (
+                                    <>
+                                        <IconButton name="lightbulb" onClick={() => setEditorPage("solution")} />
+                                        <IconButton name="save" disabled={!saveEnabled} onClick={() => saveExercise()} />
+                                    </>
+                                )}>
                                     <Editor
                                         defaultValue={defaultCode}
                                         defaultLanguage="javascript"
@@ -331,8 +333,19 @@ export default function Home() {
                                     />
                                 </PanelLayout>
                             </div>
-                            <div className={`w-full h-full ${showDiff ? "block" : "hidden"}`}>
-                                <PanelLayout title="Diff" header={<IconButton name="return" onClick={() => setShowDiff(false)} />}>
+                            <div className={`w-full h-full ${editorPage === "solution" ? "block" : "hidden"}`}>
+                                <PanelLayout title="Solution" header={<IconButton name="return" onClick={() => setEditorPage("editor")} />}>
+                                    <Editor
+                                        value={exercise?.solution}
+                                        defaultLanguage="typescript"
+                                        theme="galaxy"
+                                        options={{ readOnly: true, "bracketPairColorization.enabled": false, minimap: { enabled: false } } as any}
+                                        loading={<LoadSpinner />}
+                                    />
+                                </PanelLayout>
+                            </div>
+                            <div className={`w-full h-full ${editorPage === "diff" ? "block" : "hidden"}`}>
+                                <PanelLayout title="Diff" header={<IconButton name="return" onClick={() => setEditorPage("editor")} />}>
                                     <DiffEditor
                                         original={exercise?.output}
                                         modified={!logs[0] ? logs[1].map(l => l.map(p => p[0]).join(" ")).join("\n") : ""}
@@ -380,7 +393,7 @@ export default function Home() {
                                                         <p>{runResult == 0 ? "Output and requirements were met" : runResult == 1 ? "Correct output but some requirements were not met" : runResult == 2 ? "Wrong output" : "Some required variables were not defined"}</p>
                                                     </div>
                                                     {runResult == 2 && (
-                                                        <button onClick={() => setShowDiff(true)}>
+                                                        <button onClick={() => setEditorPage("diff")}>
                                                             <p className="text-sm text-slate-500">Click here to compare with a possible result</p>
                                                         </button>
                                                     )}

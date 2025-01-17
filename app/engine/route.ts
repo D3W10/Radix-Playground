@@ -37,6 +37,7 @@ function tsCompile(source: string, options?: ts.TranspileOptions): string {
             target: ts.ScriptTarget.ESNext,
             module: ts.ModuleKind.ESNext,
             strict: true,
+            noLib: true,
             esModuleInterop: true,
             resolveJsonModule: true,
             isolatedModules: true
