@@ -55,24 +55,28 @@ export default function Home() {
         setSaveEnabled(false);
 
         try {
-            const execResult = await (await fetch("/engine", {
-                method: "POST",
-                body: JSON.stringify({ code: monaco!.editor.getModels()[0].getValue(), typescript: useTypeScript })
-            })).json() as ServerResult<EngineRoute>;
+            if (exercise && exercise.run) {
+                const execResult = await (await fetch("/engine", {
+                    method: "POST",
+                    body: JSON.stringify({ code: monaco!.editor.getModels()[0].getValue(), typescript: useTypeScript })
+                })).json() as ServerResult<EngineRoute>;
 
-            if (execResult.status === 0 && execResult.data !== undefined) {
-                const logObj = execResult.data.map(l => l.map(p => [indentObject(p[0]), p[1]])) as LogEntry[][];
-                setLogs([false, logObj]);
+                if (execResult.status === 0 && execResult.data !== undefined) {
+                    const logObj = execResult.data.map(l => l.map(p => [indentObject(p[0]), p[1]])) as LogEntry[][];
+                    setLogs([false, logObj]);
 
-                if (exercise)
-                    saveExercise(validateResult(execResult.data) == 0);
+                    if (exercise)
+                        saveExercise(validateResult(execResult.data) == 0);
+                }
+                else if (execResult.status === 1 && execResult.data !== undefined) {
+                    setLogs([true, execResult.data]);
+
+                    if (exercise)
+                        saveExercise(false);
+                }
             }
-            else if (execResult.status === 1 && execResult.data !== undefined) {
-                setLogs([true, execResult.data]);
-
-                if (exercise)
-                    saveExercise(false);
-            }
+            else
+                saveExercise(validateResult([]) == 0);
         }
         catch (err) {
             console.error(err);
@@ -82,9 +86,17 @@ export default function Home() {
     }
 
     function validateResult(data: EngineRoute) {
-        let level: 0 | 1 | 2 | 3 = 0, i = 1, vars: Record<string, string | number | boolean> = {};
-        const code = getCodeMinified()!;
+        let level: 0 | 1 | 2 | 3 = 0, i = 1, vars: Record<string, string | number | boolean> = {}, code: string | undefined;
         const output = (() => data.map(l => l.map(([p, t]) => t === "string" ? `"${p}"` : p)).join("\n"))();
+
+        try {
+            code = getCodeMinified()!;
+        }
+        catch {
+            console.warn("Validation failed due to syntax error");
+            setRunResult(2);
+            return 2;
+        }
 
         console.debug({ output, code });
 
@@ -134,7 +146,7 @@ export default function Home() {
     
                 if (!validation) {
                     console.warn("Validation failed on condition " + i);
-                    level = validator.check === "output" ? 2 : 1;
+                    level = (exercise && !exercise.run) || validator.check === "output" ? 2 : 1;
                 }
     
                 i++;
@@ -383,16 +395,24 @@ export default function Home() {
                                                 ) : (
                                                     <pre className="text-sm text-red-400 font-mono">{logs[1]}</pre>
                                                 )
-                                            : (
+                                            : exercise && exercise.run && (
                                                 <p className="text-sm text-slate-500 font-mono">Output log is empty</p>
                                             )}
                                             {runResult != undefined && (
                                                 <div className={`my-6 ${runResult == 0 ? "text-emerald-500" : runResult == 1 ? "text-yellow-500" : "text-red-500"} space-y-2`}>
                                                     <div className="flex items-center space-x-2">
                                                         <Icon className="w-5 h-5" icon={runResult == 0 ? "correct" : runResult == 1 ? "circle" : "wrong"} />
-                                                        <p>{runResult == 0 ? "Output and requirements were met" : runResult == 1 ? "Correct output but some requirements were not met" : runResult == 2 ? "Wrong output" : "Some required variables were not defined"}</p>
+                                                        <p>{runResult == 0 ?
+                                                                exercise && exercise.run ? "Output and requirements were met" : "The requirements were met"
+                                                            : runResult == 1 ?
+                                                                "Correct output but some requirements were not met"
+                                                            : runResult == 2 ?
+                                                                exercise && exercise.run ? "Wrong output" : "The requirements were not met"
+                                                            :
+                                                                "Some required variables were not defined"
+                                                        }</p>
                                                     </div>
-                                                    {runResult == 2 && (
+                                                    {runResult == 2 && exercise && exercise.run && (
                                                         <button onClick={() => setEditorPage("diff")}>
                                                             <p className="text-sm text-slate-500">Click here to compare with a possible result</p>
                                                         </button>

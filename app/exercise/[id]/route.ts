@@ -58,6 +58,7 @@ async function exerciseParser(content: string): Promise<Omit<Exercise, "id">> {
         validators: matterResult.data.validators,
         output: matterResult.data.output,
         varParse: matterResult.data.varParse ?? false,
+        run: matterResult.data.run ?? true,
         solution: matterResult.data.solution,
         content: processedContent.toString()
     };
