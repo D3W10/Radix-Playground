@@ -7,11 +7,9 @@
     <br />
     <br />
     <h2 align="center">Radix Playground</h2>
-    <h3 align="center">Play Revesi with your friends!</h3>
+    <h3 align="center">Run Node.JS scripts in the browser</h3>
     <br />
     <p align="center">
-        <a href="https://github.com/D3W10/Radix-Playground/releases">Game releases</a>
-        ·
         <a href="https://github.com/D3W10/Radix-Playground/issues">Report Bug</a>
         ·
         <a href="https://github.com/D3W10/Radix-Playground/issues">Request Feature</a>
