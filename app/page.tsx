@@ -120,8 +120,8 @@ export default function Home() {
 
         const options = {
             line: code.split(/\r\n|\r|\n/).length,
-            var: code.match(/let|const/g) ?? [],
-            if: code.match(/if\(/g) ?? [],
+            var: code.match(/let|const|var/g) ?? [],
+            if: code.match(/if(?=\()/g) ?? [],
             loop: (code.match(/while(?=\(.*?\))|do\{.*?\}while\(.*?\)|for\(.*?\)|\.forEach\(.*?\)/g) ?? []).map(l => {
                 if (l.startsWith("do"))
                     return "do while";
@@ -136,7 +136,7 @@ export default function Home() {
                 else
                     return l;
             }),
-            func: code.match(/function\s*\w*(?=\()|(?<=\([\w,]*\))=>|(?<=\w*)=>/g) ?? []
+            func: code.match(/function(\s\w+)?(?=\()|(?<=\([\w,]+\))=>|(?<=\w)=>/g) ?? []
         }
 
         try {
@@ -486,7 +486,7 @@ export default function Home() {
                                     {!isRunning ? (
                                         <>
                                             <Icon className="w-6 h-6" icon="rocket" />
-                                            <span>Run code</span>
+                                            <span>{exercise && !exercise.run ? "Verify code" : "Run code"}</span>
                                         </>
                                     ) : (
                                         <LoadSpinner className="h-7 text-slate-950" />
