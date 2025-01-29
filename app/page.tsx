@@ -75,7 +75,7 @@ export default function Home() {
                         saveExercise(false);
                 }
             }
-            else
+            else if (exercise)
                 saveExercise(validateResult([]) == 0);
         }
         catch (err) {
@@ -86,11 +86,12 @@ export default function Home() {
     }
 
     function validateResult(data: EngineRoute) {
-        let level: 0 | 1 | 2 | 3 = 0, i = 1, vars: Record<string, string | number | boolean> = {}, code: string | undefined;
+        let level: 0 | 1 | 2 | 3 = 0, i = 1, vars: Record<string, string | number | boolean> = {}, code: string | undefined, rawCode: string | undefined;
         const output = (() => data.map(l => l.map(([p, t]) => t === "string" ? `"${p}"` : p)).join("\n"))();
 
         try {
             code = getCodeMinified()!;
+            rawCode = monaco!.editor.getModels()[0].getValue().trim();
         }
         catch {
             console.warn("Validation failed due to syntax error");
@@ -119,7 +120,7 @@ export default function Home() {
         }
 
         const options = {
-            line: code.split(/\r\n|\r|\n/).length,
+            line: rawCode.split(/\r\n|\r|\n/).length,
             var: code.match(/let|const|var/g) ?? [],
             if: code.match(/if(?=\()/g) ?? [],
             loop: (code.match(/while(?=\(.*?\))|do\{.*?\}while\(.*?\)|for\(.*?\)|\.forEach\(.*?\)/g) ?? []).map(l => {
@@ -206,7 +207,7 @@ export default function Home() {
             setSaveEnabled(false);
 
             lStorage[0][`ex-${exercise.id}`] = newData;
-            setLStorage(lStorage);
+            setLStorage([...lStorage]);
             localStorage.setItem(`ex-${exercise.id}`, JSON.stringify(newData));
         }
     }
