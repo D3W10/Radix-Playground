@@ -55,7 +55,7 @@ export default function Home() {
         setSaveEnabled(false);
 
         try {
-            if (exercise && exercise.run) {
+            if (!exercise || exercise && exercise.run) {
                 const execResult = await (await fetch("/engine", {
                     method: "POST",
                     body: JSON.stringify({ code: monaco!.editor.getModels()[0].getValue(), typescript: useTypeScript })
